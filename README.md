@@ -35,3 +35,6 @@ Install packages
 
 ```sh
 $ pip install -r requirements.txt
+```
+
+Open the browser at http://127.0.0.1:8080/

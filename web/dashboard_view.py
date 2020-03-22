@@ -1,4 +1,5 @@
 from flask.views import MethodView
+from flask import render_template
 
 
 class DashboardView(MethodView):
@@ -7,4 +8,4 @@ class DashboardView(MethodView):
         pass
 
     def get(self):
-        return 'Hello world'
+        return render_template("dashboard.html")

@@ -11,7 +11,8 @@
         <div class="col-md-12">
             <h1>Epidemic Calculator</h1>
 
-            <canvas id="chartSIRD" width="400" height="150"></canvas>
+            <h2>SIR-D</h2>
+            <canvas id="chart-sird" width="400" height="150"></canvas>
         </div>
     </div>
 </div>
@@ -38,7 +39,7 @@
         let options = {
             responsive: true,
             hoverMode: 'index',
-            stacked: false,
+            stacked: true,
             legend: {
                 display: true
             },
@@ -48,34 +49,6 @@
                        display: true,
                        position: 'left',
                        drawTicks: true,
-                       id: 'y-axis-susceptible',
-                    },
-                    {
-                       display: true,
-                       position: 'right',
-                       drawTicks: false,
-                       id: 'y-axis-infected',
-                       gridLines: {
-                           drawOnChartArea: false
-                        }
-                    },
-                    {
-                       display: true,
-                       position: 'right',
-                       drawTicks: false,
-                       id: 'y-axis-recovered',
-                       gridLines: {
-                           drawOnChartArea: false
-                        }
-                    },
-                    {
-                       display: true,
-                       position: 'right',
-                       drawTicks: false,
-                       id: 'y-axis-death',
-                       gridLines: {
-                           drawOnChartArea: false
-                        }
                     }
                 ]
             }
@@ -93,7 +66,7 @@
                         borderWidth: 3,
                         pointBorderWidth: 0,
                         pointRadius: 0,
-                        yAxisID: 'y-axis-susceptible'
+
                     },
                     {
                         label: "Infectados",
@@ -104,7 +77,6 @@
                         borderWidth: 3,
                         pointBorderWidth: 0,
                         pointRadius: 0,
-                        yAxisID: 'y-axis-infected'
                     },
                     {
                         label: "Recuperados",
@@ -115,7 +87,7 @@
                         borderWidth: 3,
                         pointBorderWidth: 0,
                         pointRadius: 0,
-                        yAxisID: 'y-axis-recovered'
+
                     },
                     {
                         label: "Muertos",
@@ -126,12 +98,11 @@
                         pointBorderWidth: 0,
                         pointRadius: 0,
                         fill: false,
-                        yAxisID: 'y-axis-death'
                     }
                 ]
             }
 
-        var chart = new Chart(document.getElementById("chartSIRD").getContext('2d'), {
+        new Chart(document.getElementById("chart-sird").getContext('2d'), {
             type: 'line',
             data: data,
             options: options

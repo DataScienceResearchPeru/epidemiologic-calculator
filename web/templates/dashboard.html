@@ -1,13 +1,144 @@
 {% extends "base.html" %}
 
+{% block css %}
+<!-- Chart CSS-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css">
+{% endblock %}
+
 {% block content %}
 <div class="container py-5">
     <div class="row">
         <div class="col-md-12">
             <h1>Epidemic Calculator</h1>
 
+            <canvas id="chartSIRD" width="400" height="150"></canvas>
         </div>
     </div>
 </div>
 
 {% endblock %}
+
+{% block js %}
+<!-- Chart JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    axios.get("/api/sird")
+        .then(response => {
+            let data = response.data;
+            console.log("data", data);
+            graphics(data);
+        })
+        .catch(err => {
+            console.log('err', err);
+        });
+
+    function graphics(dataset) {
+        let options = {
+            responsive: true,
+            hoverMode: 'index',
+            stacked: false,
+            legend: {
+                display: true
+            },
+            scales: {
+                yAxes: [
+                    {
+                       display: true,
+                       position: 'left',
+                       drawTicks: true,
+                       id: 'y-axis-susceptible',
+                    },
+                    {
+                       display: true,
+                       position: 'right',
+                       drawTicks: false,
+                       id: 'y-axis-infected',
+                       gridLines: {
+                           drawOnChartArea: false
+                        }
+                    },
+                    {
+                       display: true,
+                       position: 'right',
+                       drawTicks: false,
+                       id: 'y-axis-recovered',
+                       gridLines: {
+                           drawOnChartArea: false
+                        }
+                    },
+                    {
+                       display: true,
+                       position: 'right',
+                       drawTicks: false,
+                       id: 'y-axis-death',
+                       gridLines: {
+                           drawOnChartArea: false
+                        }
+                    }
+                ]
+            }
+        };
+
+        let data = {
+                labels: dataset.time,
+                datasets: [
+                    {
+                        label: "Suceptibles",
+                        data: dataset.susceptible,
+                        borderColor: "rgb(75, 192, 192)",
+                        backgroundColor: "rgb(75, 192, 192)",
+                        fill: false,
+                        borderWidth: 3,
+                        pointBorderWidth: 0,
+                        pointRadius: 0,
+                        yAxisID: 'y-axis-susceptible'
+                    },
+                    {
+                        label: "Infectados",
+                        data: dataset.infected,
+                        borderColor: "rgb(51, 92, 181)",
+                        backgroundColor: "rgb(51, 92, 181)",
+                        fill: false,
+                        borderWidth: 3,
+                        pointBorderWidth: 0,
+                        pointRadius: 0,
+                        yAxisID: 'y-axis-infected'
+                    },
+                    {
+                        label: "Recuperados",
+                        data: dataset.recovered,
+                        borderColor: "rgb(59, 136, 205)",
+                        backgroundColor: "rgb(59, 136, 205)",
+                        fill: false,
+                        borderWidth: 3,
+                        pointBorderWidth: 0,
+                        pointRadius: 0,
+                        yAxisID: 'y-axis-recovered'
+                    },
+                    {
+                        label: "Muertos",
+                        data: dataset.death,
+                        borderColor: "rgb(255, 99, 132)",
+                        backgroundColor: "rgb(255, 99, 132)",
+                        borderWidth: 3,
+                        pointBorderWidth: 0,
+                        pointRadius: 0,
+                        fill: false,
+                        yAxisID: 'y-axis-death'
+                    }
+                ]
+            }
+
+        var chart = new Chart(document.getElementById("chartSIRD").getContext('2d'), {
+            type: 'line',
+            data: data,
+            options: options
+        });
+    }
+
+</script>
+
+{% endblock js %}
+

@@ -2,6 +2,7 @@ import jinja2
 from environment_config import EnvironmentConfig
 from flask import Flask
 from web.configuration import configure_web_route
+from api.routes import api_bp
 
 templates_folders = [
     EnvironmentConfig.TEMPLATE_DIR,
@@ -15,6 +16,7 @@ ROUTING_MODULES = [
 def create_app(templates_folders_list=templates_folders):
     application = Flask(__name__)
 
+    application.register_blueprint(api_bp)
     application.config['SECRET_KEY'] = EnvironmentConfig.SECRET_KEY
     application.config['TESTING'] = True
 

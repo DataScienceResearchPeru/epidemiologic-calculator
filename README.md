@@ -39,7 +39,7 @@ $ pip install -r requirements.txt
 
 Run project
 ```sh
-$ python3 app.py
+$ python3 main.py
 ```
 
 Open the browser at http://127.0.0.1:8080/

@@ -20,6 +20,17 @@ axios.get("/api/seird")
         console.log('err', err);
     });
 
+axios.get("/api/seaichurd")
+    .then(response => {
+        let data = response.data;
+        let type = "seaichurd";
+        console.log("data", data);
+        graphics(data, type);
+    })
+    .catch(err => {
+        console.log('err', err);
+    });
+
 
 function graphics(dataset, type) {
     let datasets = [{
@@ -77,6 +88,61 @@ function graphics(dataset, type) {
         });
     }
 
+    if (type=="seaichurd") {
+        dataset_seaichurd=[{
+                            label: "Expuestos",
+                            data: dataset.exposed,
+                            borderColor: "rgb(201, 203, 207)",
+                            backgroundColor: "rgba(201, 203, 207, 0.1)",
+                            borderWidth: 3,
+                            pointBorderWidth: 1,
+                            pointRadius: 3,
+                            lineTension: 0.1,
+                           },
+                           {
+                            label: "Asintomáticos",
+                            data: dataset.asymptomatic,
+                            borderColor: "rgb(201, 203, 207)",
+                            backgroundColor: "rgba(201, 203, 207, 0.1)",
+                            borderWidth: 3,
+                            pointBorderWidth: 1,
+                            pointRadius: 3,
+                            lineTension: 0.1,
+                           },
+                           {
+                            label: "Cuarentena",
+                            data: dataset.quarantine,
+                            borderColor: "rgb(201, 203, 207)",
+                            backgroundColor: "rgba(201, 203, 207, 0.1)",
+                            borderWidth: 3,
+                            pointBorderWidth: 1,
+                            pointRadius: 3,
+                            lineTension: 0.1,
+                           },
+                           {
+                            label: "Hospitalizados",
+                            data: dataset.hospitalized,
+                            borderColor: "rgb(201, 203, 207)",
+                            backgroundColor: "rgba(201, 203, 207, 0.1)",
+                            borderWidth: 3,
+                            pointBorderWidth: 1,
+                            pointRadius: 3,
+                            lineTension: 0.1,
+                           },
+                           {
+                            label: "UCI - Hospital",
+                            data: dataset.uci,
+                            borderColor: "rgb(201, 203, 207)",
+                            backgroundColor: "rgba(201, 203, 207, 0.1)",
+                            borderWidth: 3,
+                            pointBorderWidth: 1,
+                            pointRadius: 3,
+                            lineTension: 0.1,
+                           }];
+
+        datasets = datasets.concat(dataset_seaichurd);
+    }
+
 
     let options = {
         responsive: true,
@@ -121,7 +187,6 @@ function graphics(dataset, type) {
             options: options
         });
 
-        console.log("data sird", data);
     }
 
     if (type == "seird") {
@@ -130,8 +195,16 @@ function graphics(dataset, type) {
             data: data,
             options: options
         });
+    }
 
-        console.log("data seird", data);
+    if (type == "seaichurd") {
+        new Chart(document.getElementById("chart-seaichurd").getContext('2d'), {
+            type: 'line',
+            data: data,
+            options: options
+        });
+
+        console.log("paso!!", data);
     }
 
 }

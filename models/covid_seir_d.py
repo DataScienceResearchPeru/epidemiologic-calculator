@@ -25,7 +25,7 @@ class CovidSeirD(ICovid19):
         """
         population = initial_conditions[0] + initial_conditions[1] + initial_conditions[2] + initial_conditions[3] + \
                      initial_conditions[4]
-        time = np.arange(0, duration, 0.01)
+        time = np.arange(0, duration, 1)
 
         def seird(x, t, a1, a2, a3, a4):
             """

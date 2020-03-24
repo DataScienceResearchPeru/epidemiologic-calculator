@@ -22,7 +22,7 @@ class CovidSirD(ICovid19):
         population = S + I + R + D
         """
         population = initial_conditions[0] + initial_conditions[1] + initial_conditions[2] + initial_conditions[3]
-        time = np.arange(0, duration, 0.01)
+        time = np.arange(0, duration, 1)
 
         def sird(x, t, a1, a2, a3):
             """

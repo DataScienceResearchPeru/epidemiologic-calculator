@@ -11,8 +11,12 @@
         <div class="col-md-12">
             <h1>Epidemic Calculator</h1>
 
-            <h2>SIR-D</h2>
+            <h2 class="py-3">SIR-D</h2>
             <canvas id="chart-sird" width="400" height="150"></canvas>
+
+            <h2 class="py-3">SEIR-D</h2>
+            <canvas id="chart-seird" width="400" height="150"></canvas>
+
         </div>
     </div>
 </div>
@@ -23,93 +27,6 @@
 <!-- Chart JS-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
-<script>
-    axios.get("/api/sird")
-        .then(response => {
-            let data = response.data;
-            console.log("data", data);
-            graphics(data);
-        })
-        .catch(err => {
-            console.log('err', err);
-        });
-
-    function graphics(dataset) {
-        let options = {
-            responsive: true,
-            hoverMode: 'index',
-            stacked: true,
-            legend: {
-                display: true
-            },
-            scales: {
-                yAxes: [
-                    {
-                       display: true,
-                       position: 'left',
-                       drawTicks: true,
-                    }
-                ]
-            }
-        };
-
-        let data = {
-                labels: dataset.time,
-                datasets: [
-                    {
-                        label: "Suceptibles",
-                        data: dataset.susceptible,
-                        borderColor: "rgb(75, 192, 192)",
-                        backgroundColor: "rgb(75, 192, 192)",
-                        fill: false,
-                        borderWidth: 3,
-                        pointBorderWidth: 0,
-                        pointRadius: 0,
-
-                    },
-                    {
-                        label: "Infectados",
-                        data: dataset.infected,
-                        borderColor: "rgb(51, 92, 181)",
-                        backgroundColor: "rgb(51, 92, 181)",
-                        fill: false,
-                        borderWidth: 3,
-                        pointBorderWidth: 0,
-                        pointRadius: 0,
-                    },
-                    {
-                        label: "Recuperados",
-                        data: dataset.recovered,
-                        borderColor: "rgb(59, 136, 205)",
-                        backgroundColor: "rgb(59, 136, 205)",
-                        fill: false,
-                        borderWidth: 3,
-                        pointBorderWidth: 0,
-                        pointRadius: 0,
-
-                    },
-                    {
-                        label: "Muertos",
-                        data: dataset.death,
-                        borderColor: "rgb(255, 99, 132)",
-                        backgroundColor: "rgb(255, 99, 132)",
-                        borderWidth: 3,
-                        pointBorderWidth: 0,
-                        pointRadius: 0,
-                        fill: false,
-                    }
-                ]
-            }
-
-        new Chart(document.getElementById("chart-sird").getContext('2d'), {
-            type: 'line',
-            data: data,
-            options: options
-        });
-    }
-
-</script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
 {% endblock js %}
-

@@ -2,14 +2,15 @@ import numpy as np
 
 from flask_restful import Resource
 from http import HTTPStatus
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from models.covid_sir_d import CovidSirD
 from models.covid_seir_d import CovidSeirD
 from models.covid_seaichur_d import CovidSeaichurD
 
 
 class CovidSirDResource(Resource):
-    @staticmethod
-    def get():
+    @jwt_required
+    def get(self):
         model_sird = CovidSirD()
         data, time = model_sird.model(initial_conditions=np.array([32000000., 6., 0., 0.]), duration=120)
         ds_dt = data[:, 0]
@@ -17,6 +18,10 @@ class CovidSirDResource(Resource):
         dr_dt = data[:, 2]
         dd_dt = data[:, 3]
         time = np.around(time, decimals=2)
+
+        current_user = get_jwt_identity()
+        if current_user is None:
+            return {'message': 'Access is not allowed'}, HTTPStatus.FORBIDDEN
 
         return {'susceptible': ds_dt.tolist(),
                 'infected': di_dt.tolist(),

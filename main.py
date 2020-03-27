@@ -2,6 +2,7 @@ import jinja2
 from flask import Flask
 from flask_injector import FlaskInjector
 from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager
 from injector import Binder, singleton
 from sqlalchemy import MetaData
 
@@ -30,7 +31,6 @@ def configure_database_bindings(binder: Binder) -> Binder:
         print(e)
 
     db = SQLAlchemy(application)
-
     metadata.reflect(db.engine)
     metadata.drop_all(db.engine)
     db.session.commit()
@@ -48,10 +48,17 @@ modules_list = [
 ]
 
 
+def register_extensions(application: Flask):
+    application.register_blueprint(api_bp)
+    jwt = JWTManager()
+    jwt.init_app(application)
+
+
 def create_app(templates_folders_list=templates_folders, modules=modules_list):
     application = Flask(__name__)
 
-    application.register_blueprint(api_bp)
+    register_extensions(application)
+
     application.config['SECRET_KEY'] = EnvironmentConfig.SECRET_KEY
     application.config['TESTING'] = True
     application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

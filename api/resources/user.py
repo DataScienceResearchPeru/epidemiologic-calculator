@@ -51,4 +51,4 @@ class UserLoginResource(Resource):
         except Exception:
             pass
 
-        return {"message": "Invalid username or password"}, HTTPStatus.BAD_REQUEST
+        return {"message": "Invalid username or password"}, HTTPStatus.UNAUTHORIZED

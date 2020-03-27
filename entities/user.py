@@ -17,6 +17,9 @@ class User:
             return string.encode('utf-8')
         return string
 
+    def valid_credential(self, password: str):
+        return bcrypt.checkpw(self.string_to_bit(password), self.encrypted_password)
+
     def data(self):
         return {
             'first_name': self.first_name,

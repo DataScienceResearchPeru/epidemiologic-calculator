@@ -186,6 +186,11 @@ function graphics(dataset, type) {
             data: data,
             options: options
         });
+        // new Chart(d3.select("#chart-sird").getContext('2d'), {
+        //     type: 'line',
+        //     data: data,
+        //     options: options
+        // });
 
     }
 

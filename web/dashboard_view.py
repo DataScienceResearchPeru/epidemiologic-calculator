@@ -8,4 +8,4 @@ class DashboardView(MethodView):
         pass
 
     def get(self):
-        return render_template("dashboard.html")
+        return render_template("index.html")

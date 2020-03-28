@@ -2,44 +2,50 @@
 
 ## Installation
 
-Make sure that you have installed Python 3.8.2 (https://www.python.org/)
-
+Make sure that you have installed [Python 3.8.2](https://www.python.org)
 
 ### Start project
 
 Clone the project
-    
-```sh
+
+```shell
 git clone git@github.com:DataScienceResearchPeru/epidemiologic-calculator.git
 ```
 
 Enter the project directory
 
-```sh
+```shell
  cd epidemiologic-calculator
 ```
 
 Create a virtual environment
 
-```sh
-$ python3 -m venv venv
+```shell
+python3 -m venv venv
 ```
 
 Active virtual environment
 
-```sh
-$ source venv/bin/activate
+```shell
+source venv/bin/activate
 ```
 
 Install packages
 
-```sh
-$ pip install -r requirements.txt
+```shell
+pip install -r requirements.txt
 ```
 
-Run project
-```sh
-$ python3 main.py
+Run backend
+
+```shell
+python3 main.py
 ```
 
-Open the browser at http://127.0.0.1:8080/
+Run frontend
+
+```shell
+cd web; npm start
+```
+
+Open the browser at [Localhost](http://127.0.0.1:8080/)

@@ -1,0 +1,20 @@
+{
+  "name": "epidemiologic-calculator",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently --kill-others \"yarn back\" \"yarn front\"",
+    "back": "python3 main.py",
+    "front": "parcel watch web/index.html -d static && mv static/index.html web/templates/index.html"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "5.1.0",
+    "parcel-bundler": "1.12.4",
+    "sass": "1.26.3",
+    "typescript": "3.8.3"
+  }
+}

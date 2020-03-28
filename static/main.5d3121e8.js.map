@@ -1,0 +1,1 @@
+{"version":3,"sources":["src/main.ts"],"names":[],"mappings":";;;AAEA,aAAA,OAAA,eAAA,QAAA,aAAA,CAAA,OAAA,IAFA,QAAA,wBAEA,QAAQ,IAAI","file":"main.5d3121e8.js","sourceRoot":"../web","sourcesContent":["import './styles/styles.scss'\n\nconsole.log('here is my first comment')\n"]}

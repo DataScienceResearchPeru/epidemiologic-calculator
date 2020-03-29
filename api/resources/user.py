@@ -1,12 +1,12 @@
-from flask import request, render_template, url_for
+from flask import request, render_template
 from flask_restful import Resource
 from injector import inject
-from itsdangerous import URLSafeTimedSerializer, BadTimeSignature, SignatureExpired
+from flask_jwt_extended import create_access_token, decode_token
+from jwt.exceptions import ExpiredSignatureError, DecodeError, InvalidTokenError
+from datetime import timedelta
 from http import HTTPStatus
-from flask_jwt_extended import create_access_token
 from repositories.i_user_repository import IUserRepository
 from services.i_email_method_service import IEmailMethodService
-from environment_config import EnvironmentConfig
 from entities.user import User
 
 
@@ -61,32 +61,31 @@ class UserLoginResource(Resource):
         return {"message": "Email or password is incorrect"}, HTTPStatus.UNAUTHORIZED
 
 
-class UserResetPasswordResource(Resource):
+class UserForgotPasswordResource(Resource):
     @inject
     def __init__(self, user_repository: IUserRepository, email_method_service: IEmailMethodService):
         self.user_repository = user_repository
         self.email_method_service = email_method_service
 
-    def get(self):
-        pass
-
     def post(self):
         data = request.get_json()
         email = data.get('email')
+        url = request.host_url + 'reset-password/'
 
         try:
             user = self.user_repository.get_user_by_email(email=email)
 
-            password_reset_serializer = URLSafeTimedSerializer(EnvironmentConfig.SECRET_KEY)
-            token = password_reset_serializer.dumps(email, salt='password-reset-salt')
+            expires = timedelta(hours=24)
+            reset_token = create_access_token(str(user.email), expires_delta=expires)
+            body_html = render_template("messages/password_reset_email.html", password_reset_url=url + reset_token)
+            body_text = render_template("messages/password_reset_email.txt", password_reset_url=url + reset_token)
 
-            template = render_template("messages/password_reset_email.html",
-                                       password_reset_url=url_for('.edit-password', token=token,
-                                                                  _external=True))
             data_message = {
                 'to': user.email,
                 'subject': 'Restablece tu contraseña',
-                'content': template
+                'sender': ("Data Science Research Perú", "support@datascience.com"),
+                'content_html': body_html,
+                'content_text': body_text
             }
 
             if self.email_method_service.send_message(data_message):
@@ -99,51 +98,30 @@ class UserResetPasswordResource(Resource):
         return {"message": "Email is not registered"}, HTTPStatus.NOT_FOUND
 
 
-class UserEditPasswordResource(Resource):
+class UserResetPasswordResource(Resource):
     @inject
     def __init__(self, user_repository: IUserRepository, email_method_service: IEmailMethodService):
         self.user_repository = user_repository
         self.email_method_service = email_method_service
 
-    def get(self, token):
-        password_reset_serializer = URLSafeTimedSerializer(EnvironmentConfig.SECRET_KEY)
-
-        try:
-            email = password_reset_serializer.loads(token,
-                                                    salt='password-reset-salt',
-                                                    max_age=600)
-            return {"message": "Valid token "}, HTTPStatus.OK
-
-        except SignatureExpired as e:
-            print("error: {0}".format(e))
-        except BadTimeSignature as e:
-            print("error: {0}".format(e))
-
-        return {"message": "The link to reset the password is invalid or has expired"}, HTTPStatus.BAD_REQUEST
-
-    def post(self, token):
-        password_reset_serializer = URLSafeTimedSerializer(EnvironmentConfig.SECRET_KEY)
+    def post(self):
         data = request.get_json()
-        password = data.get('password')
         new_password = data.get('new_password')
-
-        if password != new_password:
-            return {"message": "Passwords do not match"}, HTTPStatus.BAD_REQUEST
+        reset_token = data.get('reset_token')
 
         try:
-            email = password_reset_serializer.loads(token,
-                                                    salt='password-reset-salt',
-                                                    max_age=600)
+            email = decode_token(reset_token)['identity']
             user = self.user_repository.get_user_by_email(email)
             user.change_password(new_password)
             self.user_repository.add(user)
 
-        except SignatureExpired as e:
-            print("error: {0}".format(e))
-        except BadTimeSignature as e:
-            print("error: {0}".format(e))
+            return {"message": "Password was successfully changed"}, HTTPStatus.OK
 
-        except Exception as e:
+        except ExpiredSignatureError as e:
             print("error: {0}".format(e))
+        except (DecodeError, InvalidTokenError) as e:
+            print("error: {0}".format(e))
+        except Exception as e:
+            print("error Exception: {0}".format(e))
 
         return {"message": "The link to reset the password is invalid or has expired"}, HTTPStatus.BAD_REQUEST

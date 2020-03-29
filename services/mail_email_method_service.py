@@ -13,10 +13,10 @@ class MailEmailMethodService(IEmailMethodService):
     def send_message(self, data_message: dict):
         message = Message(
             subject=data_message['subject'],
-            sender=("Data Science Research Perú", "datascience@gmail.com"),
+            sender=data_message['sender'],
             recipients=[data_message['to']],
-            body=data_message['content'],
-            html=data_message['content']
+            body=data_message['content_text'],
+            html=data_message['content_html']
         )
 
         try:

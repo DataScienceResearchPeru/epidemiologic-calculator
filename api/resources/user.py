@@ -91,11 +91,11 @@ class UserForgotPasswordResource(Resource):
             if self.email_method_service.send_message(data_message):
                 return {"message": "Please check your email for the reset password link"}, HTTPStatus.OK
             else:
-                return {"message": "Error sending the message"}, HTTPStatus.BAD_REQUEST
+                return {"message": "Error sending the message"}, HTTPStatus.INTERNAL_SERVER_ERROR
         except Exception as e:
             print("error: {0}".format(e))
 
-        return {"message": "Email is not registered"}, HTTPStatus.NOT_FOUND
+        return {"message": "Email is not registered"}, HTTPStatus.BAD_REQUEST
 
 
 class UserResetPasswordResource(Resource):

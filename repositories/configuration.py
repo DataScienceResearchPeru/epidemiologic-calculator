@@ -6,3 +6,4 @@ from repositories.sqlalchemy.user_repository_sqlalchemy import UserRepositorySql
 
 def configure_repositories_binding(binder: Binder)-> Binder:
     binder.bind(IUserRepository, UserRepositorySqlAlchemy)
+    return binder

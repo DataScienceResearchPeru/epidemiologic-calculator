@@ -1,4 +1,5 @@
 import jinja2
+
 from flask import Flask
 from flask_injector import FlaskInjector
 from flask_sqlalchemy import SQLAlchemy
@@ -10,7 +11,9 @@ from environment_config import EnvironmentConfig
 from repositories.configuration import configure_repositories_binding
 from repositories.sqlalchemy.mapping.user_mapping import user_mapping
 from web.configuration import configure_web_route
+from services.configuration import configure_services_binding
 from api.routes import api_bp
+
 
 templates_folders = [
     EnvironmentConfig.TEMPLATE_DIR,
@@ -44,6 +47,7 @@ def configure_database_bindings(binder: Binder) -> Binder:
 
 modules_list = [
     configure_repositories_binding,
+    configure_services_binding,
     configure_database_bindings
 ]
 
@@ -60,7 +64,14 @@ def create_app(templates_folders_list=templates_folders, modules=modules_list):
     register_extensions(application)
 
     application.config['SECRET_KEY'] = EnvironmentConfig.SECRET_KEY
-    application.config['TESTING'] = True
+    application.config['TESTING'] = False
+    application.config['MAIL_SERVER'] = EnvironmentConfig.MAIL_SERVER
+    application.config['MAIL_PORT'] = EnvironmentConfig.MAIL_PORT
+    application.config['MAIL_USE_TLS'] = EnvironmentConfig.MAIL_USE_TLS
+    application.config['MAIL_USE_SSL'] = EnvironmentConfig.MAIL_USE_SSL
+    application.config['MAIL_USERNAME'] = EnvironmentConfig.MAIL_USERNAME
+    application.config['MAIL_PASSWORD'] = EnvironmentConfig.MAIL_PASSWORD
+
     application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     application.config.update(
         SQLALCHEMY_DATABASE_URI=EnvironmentConfig.DATABASE

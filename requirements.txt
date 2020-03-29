@@ -1,6 +1,7 @@
 aniso8601==8.0.0
 attrs==19.3.0
 bcrypt==3.1.7
+blinker==1.4
 certifi==2019.11.28
 cffi==1.14.0
 chardet==3.0.4
@@ -8,6 +9,7 @@ click==7.1.1
 Flask==1.1.1
 Flask-Injector==0.12.3
 Flask-JWT-Extended==3.24.1
+Flask-Mail==0.9.1
 Flask-RESTful==0.3.8
 flask-restplus==0.13.0
 Flask-SQLAlchemy==2.4.1

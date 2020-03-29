@@ -20,6 +20,9 @@ class User:
     def valid_credential(self, password: str):
         return bcrypt.checkpw(self.string_to_bit(password), self.encrypted_password)
 
+    def change_password(self, password):
+        self.encrypted_password = bcrypt.hashpw(self.string_to_bit(password), bcrypt.gensalt())
+
     def data(self):
         return {
             'first_name': self.first_name,

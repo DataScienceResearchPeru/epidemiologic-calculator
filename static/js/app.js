@@ -203,8 +203,6 @@ function graphics(dataset, type) {
             data: data,
             options: options
         });
-
-        console.log("paso!!", data);
     }
 
 }

@@ -3,6 +3,7 @@ from scipy.integrate import odeint
 from models.i_covid_19 import ICovid19
 
 # Parametros Epidemiologicos
+"""
 A1 = 0.50  # contagio de SUSCEPTIBLE por un Infectado  [1/T]
 A2 = 0.28  # contagio de SUSCEPTIBLE por un Asintomatico  [1/T] ( 12.5 dias )
 
@@ -25,10 +26,15 @@ R4 = 0.03  # Recuperacion de un UCI [1/T]  (20 dias)
 D1 = 0.001  # Muerte de un Infectado [1/T]
 D2 = 0.002  # Muerte de un Hospitalizado [1/T]
 D3 = 0.005  # Muerte de un UCI [1/T]
+"""
 
 
 class CovidSeaichurD(ICovid19):
-    def model(self, initial_conditions, duration):
+    def model(self, initial_conditions, duration, epidemiological_parameters=dict(A1=0.50, A2=0.28, A3=0.35, A4=0.40,
+                                                                                  A5=0.20, A6=0.35, A7=0.50, A8=0.15,
+                                                                                  A9=0.30, QQ=0.0, R1=0.20, R2=0.15,
+                                                                                  R3=0.07, R4=0.03, D1=0.001, D2=0.002,
+                                                                                  D3=0.005)):
         """
         POBLACIONES EPIDEMIOLOGICAS
         Susceptibles   (S) : initial_conditions[0]
@@ -44,6 +50,24 @@ class CovidSeaichurD(ICovid19):
         POBLACION EPIDEMIOLOGICA TOTAL
         population = S + E + A + I + C + H + U + R + D
         """
+        A1 = epidemiological_parameters["A1"]
+        A2 = epidemiological_parameters["A2"]
+        A3 = epidemiological_parameters["A3"]
+        A4 = epidemiological_parameters["A4"]
+        A5 = epidemiological_parameters["A5"]
+        A6 = epidemiological_parameters["A6"]
+        A7 = epidemiological_parameters["A7"]
+        A8 = epidemiological_parameters["A8"]
+        A9 = epidemiological_parameters["A9"]
+        QQ = epidemiological_parameters["QQ"]
+        R1 = epidemiological_parameters["R1"]
+        R2 = epidemiological_parameters["R2"]
+        R3 = epidemiological_parameters["R3"]
+        R4 = epidemiological_parameters["R4"]
+        D1 = epidemiological_parameters["D1"]
+        D2 = epidemiological_parameters["D2"]
+        D3 = epidemiological_parameters["D3"]
+
         population = initial_conditions[0] + initial_conditions[1] + initial_conditions[2] + initial_conditions[3] + \
                      initial_conditions[4] + initial_conditions[5] + initial_conditions[6] + initial_conditions[7] + \
                      initial_conditions[8]

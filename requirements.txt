@@ -7,6 +7,7 @@ cffi==1.14.0
 chardet==3.0.4
 click==7.1.1
 Flask==1.1.1
+flask-cors==3.0.8
 Flask-Injector==0.12.3
 Flask-JWT-Extended==3.24.1
 Flask-Mail==0.9.1

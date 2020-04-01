@@ -14,6 +14,7 @@ from web.configuration import configure_web_route
 from services.configuration import configure_services_binding
 from api.routes import api_bp
 
+from flask_cors import CORS, cross_origin
 
 templates_folders = [
     EnvironmentConfig.TEMPLATE_DIR,
@@ -64,6 +65,9 @@ def create_app(templates_folders_list=templates_folders, modules=modules_list):
     register_extensions(application)
 
     application.config['SECRET_KEY'] = EnvironmentConfig.SECRET_KEY
+    cors = CORS(application)
+    application.config['CORS_HEADERS'] = 'Content-Type'
+    
     application.config['TESTING'] = False
     application.config['MAIL_SERVER'] = EnvironmentConfig.MAIL_SERVER
     application.config['MAIL_PORT'] = EnvironmentConfig.MAIL_PORT
@@ -76,6 +80,7 @@ def create_app(templates_folders_list=templates_folders, modules=modules_list):
     application.config.update(
         SQLALCHEMY_DATABASE_URI=EnvironmentConfig.DATABASE
     )
+
 
     for routing in ROUTING_MODULES:
         routing(application)

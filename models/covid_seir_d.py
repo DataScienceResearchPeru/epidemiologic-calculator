@@ -11,7 +11,7 @@ A4 = 0.00     # Muerte
 
 class CovidSeirD(ICovid19):
 
-    def model(self, initial_conditions, duration):
+    def model(self, initial_conditions, duration, epidemiological_parameters=None):
         """
         POBLACIONES EPIDEMIOLOGICAS
         Susceptibles (S) : initial_conditions[0]

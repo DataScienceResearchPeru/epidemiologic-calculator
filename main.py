@@ -4,6 +4,7 @@ from flask import Flask
 from flask_injector import FlaskInjector
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 from injector import Binder, singleton
 from sqlalchemy import MetaData
 
@@ -14,7 +15,6 @@ from web.configuration import configure_web_route
 from services.configuration import configure_services_binding
 from api.routes import api_bp
 
-from flask_cors import CORS, cross_origin
 
 templates_folders = [
     EnvironmentConfig.TEMPLATE_DIR,
@@ -80,7 +80,6 @@ def create_app(templates_folders_list=templates_folders, modules=modules_list):
     application.config.update(
         SQLALCHEMY_DATABASE_URI=EnvironmentConfig.DATABASE
     )
-
 
     for routing in ROUTING_MODULES:
         routing(application)

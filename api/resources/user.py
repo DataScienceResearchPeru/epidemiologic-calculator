@@ -46,7 +46,7 @@ class UserLoginResource(Resource):
 
     def post(self):
         data = request.get_json()
-        email = data.get('email')
+        email = data.get('username')
         password = data.get('password')
 
         try:
@@ -54,7 +54,7 @@ class UserLoginResource(Resource):
 
             if user.valid_credential(password=password):
                 access_token = create_access_token(identity=email)
-                return {'access_token': access_token}, HTTPStatus.OK
+                return {'full_name': user.full_name(), 'access_token': access_token}, HTTPStatus.OK
         except Exception:
             pass
 

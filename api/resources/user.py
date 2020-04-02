@@ -24,8 +24,8 @@ class UserListResource(Resource):
         try:
             self.user_repository.get_user_by_email(data['email'])
         except Exception:
-            user = User(first_name=data['first_name'],
-                        last_name=data['last_name'],
+            user = User(first_name=data['firstName'],
+                        last_name=data['lastName'],
                         institution=data['institution'],
                         email=data['email'],
                         password=data['password'])
@@ -106,8 +106,8 @@ class UserResetPasswordResource(Resource):
 
     def post(self):
         data = request.get_json()
-        new_password = data.get('new_password')
-        reset_token = data.get('reset_token')
+        new_password = data.get('newPassword')
+        reset_token = data.get('resetToken')
 
         try:
             email = decode_token(reset_token)['identity']

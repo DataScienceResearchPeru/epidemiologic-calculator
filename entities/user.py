@@ -3,13 +3,15 @@ import bcrypt
 
 class User:
 
-    def __init__(self, first_name: str, last_name: str, institution: str, email: str, password: str, confirm_email: bool = True):
+    def __init__(self, first_name: str, last_name: str, institution: str, email: str, password: str,
+                 confirm_email: bool = True, uid: int = None):
         self.first_name = first_name
         self.last_name = last_name
         self.institution = institution
         self.email = email
         self.encrypted_password = bcrypt.hashpw(self.string_to_bit(password), bcrypt.gensalt())
         self.confirm_email = confirm_email
+        self.id = uid
 
     @staticmethod
     def string_to_bit(string):
@@ -26,8 +28,9 @@ class User:
     def change_password(self, password):
         self.encrypted_password = bcrypt.hashpw(self.string_to_bit(password), bcrypt.gensalt())
 
-    def data(self):
+    def to_dict(self):
         return {
+            'id': self.id,
             'first_name': self.first_name,
             'last_name': self.last_name,
             'email': self.email,

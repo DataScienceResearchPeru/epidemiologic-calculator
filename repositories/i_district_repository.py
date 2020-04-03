@@ -11,3 +11,7 @@ class IDistrictRepository(ABC):
     @abstractmethod
     def find_all(self):
         pass
+
+    @abstractmethod
+    def find_by_province(self, province_id: int):
+        pass

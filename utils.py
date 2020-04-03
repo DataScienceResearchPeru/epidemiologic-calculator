@@ -9,7 +9,7 @@ from repositories.sqlalchemy.district_repository_sqlalchemy import DistrictRepos
 
 
 def seed_departament(db, data):
-    departament = Department(data['name'])
+    departament = Department(name=data['name'])
     try:
         departament_repository = DepartmentRepositorySqlAlchemy(db)
         departament_repository.add(departament)
@@ -18,7 +18,7 @@ def seed_departament(db, data):
 
 
 def seed_province(db, data):
-    province = Province(data['name'], data['department_id'])
+    province = Province(name=data['name'], department_id=data['department_id'])
     try:
         province_repository = ProvinceRepositorySqlAlchemy(db)
         province_repository.add(province)
@@ -27,7 +27,7 @@ def seed_province(db, data):
 
 
 def seed_district(db, data):
-    district = District(data['name'], data['province_id'])
+    district = District(name=data['name'], province_id=data['province_id'])
     try:
         district_repository = DistrictRepositorySqlAlchemy(db)
         district_repository.add(district)

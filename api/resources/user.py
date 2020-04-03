@@ -31,7 +31,7 @@ class UserListResource(Resource):
                         password=data['password'])
 
             self.user_repository.add(user)
-            return user.data(), HTTPStatus.CREATED
+            return user.to_dict(), HTTPStatus.CREATED
 
         return {"message": "Email already used"}, HTTPStatus.BAD_REQUEST
 

@@ -2,17 +2,17 @@ from flask_sqlalchemy import SQLAlchemy
 from injector import inject
 from sqlalchemy.exc import IntegrityError
 
-from entities.department import Departament
-from repositories.i_departament_repository import IDepartamentRepository
+from entities.department import Department
+from repositories.i_department_repository import IDepartmentRepository
 
 
-class DepartamentRepositorySqlAlchemy(IDepartamentRepository):
+class DepartmentRepositorySqlAlchemy(IDepartmentRepository):
 
     @inject
     def __init__(self, db: SQLAlchemy):
         self.db = db
 
-    def add(self, departament: Departament):
+    def add(self, departament: Department):
         try:
             self.db.session.add(departament)
             self.db.session.commit()
@@ -21,5 +21,5 @@ class DepartamentRepositorySqlAlchemy(IDepartamentRepository):
             raise
 
     def find_all(self):
-        return self.db.session.query(Departament).all()
+        return self.db.session.query(Department).all()
 

@@ -22,3 +22,10 @@ class DistrictRepositorySqlAlchemy(IDistrictRepository):
 
     def find_all(self):
         return self.db.session.query(District).all()
+
+    def find_by_province(self, province_id: int):
+        districts = self.db.session.query(District).filter(District.province_id == province_id).all()
+
+        if districts:
+            return districts
+        raise

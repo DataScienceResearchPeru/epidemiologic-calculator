@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
-from entities.department import Departament
+from entities.department import Department
 
 
-class IDepartamentRepository(ABC):
+class IDepartmentRepository(ABC):
 
     @abstractmethod
-    def add(self, departament: Departament):
+    def add(self, department: Department):
         pass
 
     @abstractmethod

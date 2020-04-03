@@ -17,6 +17,7 @@ from repositories.sqlalchemy.mapping.district_mapping import district_mapping
 from web.configuration import configure_web_route
 from services.configuration import configure_services_binding
 from api.routes import api_bp
+from utils import seed_data
 
 
 templates_folders = [
@@ -47,6 +48,8 @@ def configure_database_bindings(binder: Binder) -> Binder:
 
     metadata.create_all(db.engine)
     db.session.commit()
+
+    seed_data(db)
 
     binder.bind(SQLAlchemy, to=db, scope=singleton)
     return binder

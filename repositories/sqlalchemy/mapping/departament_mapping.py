@@ -11,7 +11,7 @@ def departament_mapping(metadata: MetaData):
         'departaments',
         metadata,
         Column('id', Integer, Sequence('departaments_id_seq'), nullable=False, primary_key=True),
-        Column('name', String(160))
+        Column('name', String(160), nullable=False, unique=True)
     )
 
     mapper(Departament, departament, properties={

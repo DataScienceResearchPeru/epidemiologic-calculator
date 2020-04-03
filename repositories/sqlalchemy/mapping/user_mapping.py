@@ -16,9 +16,9 @@ def user_mapping(metadata: MetaData):
         Column('email', String(120), unique=True),
         Column('encrypted_password', LargeBinary(60)),
         Column('confirm_email', Boolean),
-        Column('departament_id', Integer, ForeignKey('departament.id')),
-        Column('province_id', Integer, ForeignKey('province.id')),
-        Column('district_id', Integer, ForeignKey('district.id')),
+        Column('departament_id', Integer, ForeignKey('departaments.id')),
+        Column('province_id', Integer, ForeignKey('provinces.id')),
+        Column('district_id', Integer, ForeignKey('districts.id')),
         Column('created_at', DateTime(), nullable=False, server_default=func.now()),
         Column('updated_at', DateTime(), nullable=False, server_default=func.now(), onupdate=func.now())
     )

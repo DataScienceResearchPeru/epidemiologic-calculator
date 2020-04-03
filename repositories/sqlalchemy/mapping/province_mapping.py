@@ -11,8 +11,8 @@ def province_mapping(metadata: MetaData):
         'provinces',
         metadata,
         Column('id', Integer, Sequence('provinces_id_seq'), nullable=False, primary_key=True),
-        Column('name', String(160)),
-        Column('departament_id', Integer, ForeignKey('departament.id'))
+        Column('name', String(160), nullable=False, unique=True),
+        Column('departament_id', Integer, ForeignKey('departaments.id'))
     )
 
     mapper(Province, province, properties={

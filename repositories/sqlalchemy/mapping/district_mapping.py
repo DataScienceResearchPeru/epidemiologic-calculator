@@ -10,8 +10,8 @@ def district_mapping(metadata: MetaData):
         'districts',
         metadata,
         Column('id', Integer, Sequence('districts_id_seq'), nullable=False, primary_key=True),
-        Column('name', String(160)),
-        Column('province_id', Integer, ForeignKey('province.id'))
+        Column('name', String(160), nullable=False, unique=True),
+        Column('province_id', Integer, ForeignKey('provinces.id'))
     )
 
     mapper(District, district, properties={

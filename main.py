@@ -11,7 +11,7 @@ from sqlalchemy import MetaData
 from environment_config import EnvironmentConfig
 from repositories.configuration import configure_repositories_binding
 from repositories.sqlalchemy.mapping.user_mapping import user_mapping
-from repositories.sqlalchemy.mapping.departament_mapping import departament_mapping
+from repositories.sqlalchemy.mapping.department_mapping import department_mapping
 from repositories.sqlalchemy.mapping.province_mapping import province_mapping
 from repositories.sqlalchemy.mapping.district_mapping import district_mapping
 from web.configuration import configure_web_route
@@ -33,7 +33,7 @@ def configure_database_bindings(binder: Binder) -> Binder:
     application = binder.injector.get(Flask)
     metadata = MetaData()
     try:
-        departament_mapping(metadata)
+        department_mapping(metadata)
         province_mapping(metadata)
         district_mapping(metadata)
         user_mapping(metadata)

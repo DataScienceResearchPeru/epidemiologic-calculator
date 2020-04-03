@@ -1,5 +1,5 @@
 class Province:
 
-    def __init__(self, name: str, departament_id: int):
+    def __init__(self, name: str, department_id: int):
         self.name = name
-        self.departament_id = departament_id
+        self.department_id = department_id

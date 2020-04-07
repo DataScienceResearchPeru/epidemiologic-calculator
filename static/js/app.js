@@ -1,4 +1,4 @@
-axios.get("/api/sird")
+axios.get("/api/sird/0.00")
     .then(response => {
         let data = response.data;
         let type = "sird";

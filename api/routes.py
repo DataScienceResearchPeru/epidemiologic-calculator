@@ -8,7 +8,7 @@ api_bp = Blueprint('api_bp', __name__, url_prefix='/api')
 api_rest = Api(api_bp)
 
 
-api_rest.add_resource(CovidSirDResource, '/sird')
+api_rest.add_resource(CovidSirDResource, '/sird','/sird/<float:a1p>')
 api_rest.add_resource(CovidSeirDResource, '/seird')
 api_rest.add_resource(CovidSeaichurDResource, '/seaichurd')
 api_rest.add_resource(UserListResource, '/users')

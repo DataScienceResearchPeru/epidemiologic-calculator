@@ -9,9 +9,9 @@ from models.covid_seaichur_d import CovidSeaichurD
 
 
 class CovidSirDResource(Resource):
-    def get(self):
+    def get(self,a1p):
         model_sird = CovidSirD()
-        data, time = model_sird.model(initial_conditions=np.array([32000000., 6., 0., 0.]), duration=120)
+        data, time = model_sird.model(a1p=a1p, initial_conditions=np.array([32000000., 6., 0., 0.]), duration=120)
         ds_dt = data[:, 0]
         di_dt = data[:, 1]
         dr_dt = data[:, 2]

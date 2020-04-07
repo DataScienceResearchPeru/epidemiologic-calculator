@@ -10,7 +10,7 @@ A3 = 0.00     # Muerte
 
 class CovidSirD(ICovid19):
 
-    def model(self, initial_conditions, duration, epidemiological_parameters=None):
+    def model(self, a1p, initial_conditions, duration, epidemiological_parameters=None):
         """
         POBLACIONES EPIDEMIOLOGICAS
         Susceptibles (S) : initial_conditions[0]
@@ -37,4 +37,4 @@ class CovidSirD(ICovid19):
                              a2 * x[1],
                              a3 * x[1]])
 
-        return odeint(sird, initial_conditions, time, (A1, A2, A3)), time
+        return odeint(sird, initial_conditions, time, (A1, A2, A3 + a1p)), time

@@ -18,6 +18,8 @@ class EnvironmentConfig(IEnvironmentConfig):
 
     DATABASE = os.environ.get('DATABASE', 'sqlite:///epidemiologic.db')
 
+    HOST_URL = os.environ.get('HOST_URL', 'http://localhost:3000/')
+
     MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.googlemail.com')
     MAIL_PORT = os.environ.get('MAIL_PORT', 465)
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', False)

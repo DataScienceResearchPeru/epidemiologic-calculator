@@ -5,6 +5,7 @@ from flask_jwt_extended import create_access_token, decode_token
 from jwt.exceptions import ExpiredSignatureError, DecodeError, InvalidTokenError
 from datetime import timedelta
 from http import HTTPStatus
+from environment_config import EnvironmentConfig
 from repositories.i_user_repository import IUserRepository
 from services.i_email_method_service import IEmailMethodService
 from entities.user import User
@@ -12,8 +13,9 @@ from entities.user import User
 
 class UserListResource(Resource):
     @inject
-    def __init__(self, user_repository: IUserRepository):
+    def __init__(self, user_repository: IUserRepository, email_method_service: IEmailMethodService):
         self.user_repository = user_repository
+        self.email_method_service = email_method_service
 
     def get(self):
         pass
@@ -28,12 +30,65 @@ class UserListResource(Resource):
                         last_name=data['lastName'],
                         institution=data['institution'],
                         email=data['email'],
-                        password=data['password'])
+                        password=data['password'],
+                        department_id=data['departmentId'],
+                        province_id=data['provinceId'],
+                        district_id=data['districtId'],
+                        confirm_email=False)
 
             self.user_repository.add(user)
-            return user.to_dict(), HTTPStatus.CREATED
+
+            expires = timedelta(hours=24)
+            token = create_access_token(str(user.email), expires_delta=expires)
+            url = EnvironmentConfig.HOST_URL + 'verify_account/' + token
+
+            body_html = render_template("messages/confirm_email.html", confirm_url=url)
+            body_text = render_template("messages/confirm_email.txt", confirm_url=url)
+
+            data_message = {
+                'to': user.email,
+                'subject': 'Verificación de cuenta',
+                'sender': ("Data Science Research Perú", "support@datascience.com"),
+                'content_html': body_html,
+                'content_text': body_text
+            }
+
+            if self.email_method_service.send_message(data_message):
+                return user.to_dict(), HTTPStatus.OK
+            else:
+                return {"message": "Error sending the message"}, HTTPStatus.INTERNAL_SERVER_ERROR
 
         return {"message": "Email already used"}, HTTPStatus.BAD_REQUEST
+
+
+class UserVerifyAccount(Resource):
+    @inject
+    def __init__(self, user_repository: IUserRepository):
+        self.user_repository = user_repository
+
+    def get(self):
+        pass
+
+    def post(self):
+        data = request.get_json()
+        token = data.get('token')
+
+        try:
+            email = decode_token(token)['identity']
+            user = self.user_repository.get_user_by_email(email)
+            user.active_email()
+            self.user_repository.add(user)
+
+            return {"message": "Email was confirmed successfully"}, HTTPStatus.OK
+
+        except ExpiredSignatureError as e:
+            print("error: {0}".format(e))
+        except (DecodeError, InvalidTokenError) as e:
+            print("error: {0}".format(e))
+        except Exception as e:
+            print("error Exception: {0}".format(e))
+
+        return {"message": "The link is invalid or has expired"}, HTTPStatus.BAD_REQUEST
 
 
 class UserLoginResource(Resource):
@@ -52,9 +107,12 @@ class UserLoginResource(Resource):
         try:
             user = self.user_repository.get_user_by_email(email=email)
 
-            if user.valid_credential(password=password):
-                access_token = create_access_token(identity=email)
-                return {'full_name': user.full_name(), 'access_token': access_token}, HTTPStatus.OK
+            if user.is_active_email():
+                if user.valid_credential(password=password):
+                    access_token = create_access_token(identity=email)
+                    return {'full_name': user.full_name(), 'access_token': access_token}, HTTPStatus.OK
+            else:
+                return {'message': "Your email has not been verified"}, HTTPStatus.BAD_REQUEST
         except Exception:
             pass
 
@@ -70,7 +128,7 @@ class UserForgotPasswordResource(Resource):
     def post(self):
         data = request.get_json()
         email = data.get('email')
-        url = request.host_url + 'reset-password/'
+        url = EnvironmentConfig.HOST_URL + 'reset-password/'
 
         try:
             user = self.user_repository.get_user_by_email(email=email)

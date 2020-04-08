@@ -1,0 +1,8 @@
+Epidemiologic calculator
+
+Por favor verifique su cuenta.
+
+Usted se ha registrado para el servicio Epidemiologic calculator. Verifique su cuenta utilizando el siguiente enlace.
+Será direccionado al sitio del servicio y podrá ingresar a su cuenta.
+
+{{ confirm_url }}

@@ -42,12 +42,12 @@ class UserListResource(Resource):
             token = create_access_token(str(user.email), expires_delta=expires)
             url = EnvironmentConfig.HOST_URL + 'verify_account/' + token
 
-            body_html = render_template("messages/confirm_email.html", confirm_url=url)
-            body_text = render_template("messages/confirm_email.txt", confirm_url=url)
+            body_html = render_template("messages/confirm_email.html", full_name=user.full_name(), confirm_url=url)
+            body_text = render_template("messages/confirm_email.txt", full_name=user.full_name(), confirm_url=url)
 
             data_message = {
                 'to': user.email,
-                'subject': 'Verificación de cuenta',
+                'subject': 'Por favor, verifique su dirección de correo electrónico',
                 'sender': ("Data Science Research Perú", "support@datascience.com"),
                 'content_html': body_html,
                 'content_text': body_text
@@ -135,8 +135,10 @@ class UserForgotPasswordResource(Resource):
 
             expires = timedelta(hours=24)
             reset_token = create_access_token(str(user.email), expires_delta=expires)
-            body_html = render_template("messages/password_reset_email.html", password_reset_url=url + reset_token)
-            body_text = render_template("messages/password_reset_email.txt", password_reset_url=url + reset_token)
+            body_html = render_template("messages/password_reset_email.html", full_name=user.full_name(),
+                                        password_reset_url=url + reset_token)
+            body_text = render_template("messages/password_reset_email.txt", full_name=user.full_name(),
+                                        password_reset_url=url + reset_token)
 
             data_message = {
                 'to': user.email,

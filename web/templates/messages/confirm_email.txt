@@ -1,8 +1,13 @@
-Epidemiologic calculator
+Hola, {{ full_name }}
 
-Por favor verifique su cuenta.
-
-Usted se ha registrado para el servicio Epidemiologic calculator. Verifique su cuenta utilizando el siguiente enlace.
-Será direccionado al sitio del servicio y podrá ingresar a su cuenta.
+¡Bienvenido a Epidemicalk!
+Para comenzar, debe confirmar su dirección de correo electrónico.
 
 {{ confirm_url }}
+
+Saludos cordiales,
+Equipo de Data Science Research Perú
+
+Si recibió este correo electrónico pero no se registró en Epidemicalk significa que alguien se registró utilizando esta dirección de correo electrónico. Si no se registró, simplemente ignore este correo.
+
+Copyright © 2020 Data Science Research Perú. All rights reserved.

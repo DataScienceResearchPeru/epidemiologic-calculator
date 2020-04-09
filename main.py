@@ -87,7 +87,7 @@ def create_app(templates_folders_list=templates_folders, modules=modules_list):
 
     application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     application.config.update(
-        SQLALCHEMY_DATABASE_URI=EnvironmentConfig.DATABASE
+        SQLALCHEMY_DATABASE_URI=EnvironmentConfig.DATABASE_URL
     )
 
     for routing in ROUTING_MODULES:

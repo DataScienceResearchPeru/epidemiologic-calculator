@@ -1,14 +1,24 @@
 from flask_mail import Message, Mail
-from flask import current_app
+from threading import Thread
 from services.i_email_method_service import IEmailMethodService
 from smtplib import SMTPException, SMTPAuthenticationError
+from configuration_database import app
+
+
+def send_async_email(mail: Mail, message: Message):
+    with app.app_context():
+        try:
+            mail.send(message)
+        except ConnectionRefusedError:
+            print("[MAIL SERVER] not working")
+            raise
 
 
 class MailEmailMethodService(IEmailMethodService):
 
     def __init__(self):
         self.mail = Mail()
-        self.mail.init_app(current_app)
+        self.mail.init_app(app)
 
     def send_message(self, data_message: dict):
         message = Message(
@@ -20,7 +30,7 @@ class MailEmailMethodService(IEmailMethodService):
         )
 
         try:
-            self.mail.send(message)
+            Thread(target=send_async_email, args=(self.mail, message)).start()
             return True
         except SMTPAuthenticationError as e:
             print("error: {0}".format(e))
@@ -29,3 +39,4 @@ class MailEmailMethodService(IEmailMethodService):
             print("error: {0}".format(e))
 
         return False
+

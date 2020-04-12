@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_restful import Api
 from api.resources.covid_epidemiology import CovidSirDResource, CovidSeirDResource, CovidSeaichurDResource
 from api.resources.user import UserListResource, UserLoginResource, UserForgotPasswordResource, \
-                                UserResetPasswordResource, UserVerifyAccount
+                                UserResetPasswordResource, UserVerifyAccount, UserSendEmail
 from api.resources.department import DepartmentListResource
 from api.resources.province import ProvinceListResource
 from api.resources.district import DistrictListResource
@@ -19,6 +19,7 @@ api_rest.add_resource(UserListResource, '/users')
 api_rest.add_resource(UserLoginResource, '/user/login')
 api_rest.add_resource(UserForgotPasswordResource, '/user/forgot-password')
 api_rest.add_resource(UserResetPasswordResource, '/user/reset-password')
+api_rest.add_resource(UserSendEmail, '/user/resend-email')
 api_rest.add_resource(DepartmentListResource, '/departments')
 api_rest.add_resource(ProvinceListResource, *['/provinces', '/<int:department_id>/provinces'])
 api_rest.add_resource(DistrictListResource, *['/districts', '/<int:province_id>/districts'])

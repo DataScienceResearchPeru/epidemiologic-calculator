@@ -61,6 +61,41 @@ class UserListResource(Resource):
         return {"message": "Email already used"}, HTTPStatus.BAD_REQUEST
 
 
+class UserSendEmail(Resource):
+    @inject
+    def __init__(self, user_repository: IUserRepository, email_method_service: IEmailMethodService):
+        self.user_repository = user_repository
+        self.email_method_service = email_method_service
+
+    def post(self):
+        data = request.get_json()
+
+        try:
+            user = self.user_repository.get_user_by_email(data['email'])
+            expires = timedelta(hours=24)
+            token = create_access_token(str(user.email), expires_delta=expires)
+            url = EnvironmentConfig.HOST_URL + 'verify_account/' + token
+
+            body_html = render_template("messages/confirm_email.html", full_name=user.full_name(), confirm_url=url)
+            body_text = render_template("messages/confirm_email.txt", full_name=user.full_name(), confirm_url=url)
+
+            data_message = {
+                'to': user.email,
+                'subject': 'Por favor, verifique su dirección de correo electrónico',
+                'sender': ("Data Science Research Perú", "support@datascience.com"),
+                'content_html': body_html,
+                'content_text': body_text
+            }
+
+            if self.email_method_service.send_message(data_message):
+                return user.to_dict(), HTTPStatus.OK
+            else:
+                return {"message": "Error sending the message"}, HTTPStatus.INTERNAL_SERVER_ERROR
+        except Exception:
+            pass
+        return {"message": "El correo electrónico no se encuentra registrado"}, HTTPStatus.BAD_REQUEST
+
+
 class UserVerifyAccount(Resource):
     @inject
     def __init__(self, user_repository: IUserRepository):

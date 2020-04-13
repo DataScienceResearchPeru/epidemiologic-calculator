@@ -32,3 +32,29 @@ $ poetry run python -m epical
 ```
 
 Open the browser at http://127.0.0.1:8080/
+
+### Development and code quality
+
+To install code quality tools run the folowing commands
+
+```
+poetry run pre-commit install
+```
+
+Make your changes an stage them
+
+```
+git add .
+```
+
+Make your commit with poetry
+
+```
+poetry run git commit -m "your message here! :D"
+```
+
+I you have error, fix them an then repeat `git add .` and `poetry run git commit ...` and then
+
+```
+git push
+```

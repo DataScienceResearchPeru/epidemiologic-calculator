@@ -1,0 +1,13 @@
+Hola, {{ full_name }}
+
+¡Bienvenido a Epidemicalk!
+Para comenzar, debe confirmar su dirección de correo electrónico.
+
+{{ confirm_url }}
+
+Saludos cordiales,
+Equipo de Data Science Research Perú
+
+Si recibió este correo electrónico pero no se registró en Epidemicalk significa que alguien se registró utilizando esta dirección de correo electrónico. Si no se registró, simplemente ignore este correo.
+
+Copyright © 2020 Data Science Research Perú. All rights reserved.

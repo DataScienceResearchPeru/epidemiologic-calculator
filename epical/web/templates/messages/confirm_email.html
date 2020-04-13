@@ -1,0 +1,32 @@
+<div style="text-align: center; margin: auto; max-width: 630px; padding: 2rem; font-family: Roboto, Helvetica, Arial, sans-serif">
+    <div style="max-width: 255px; display: inline-block; margin: 1.8rem 0;">
+        <img src="https://i.ibb.co/KG3QGCn/logo.png" alt="logo" style="width: 100%;"/>
+    </div>
+    <div style="text-align: left; color: #484848; margin-bottom: 35px; font-size: 16px;">
+        <h3>Hola, {{ full_name }}</h3>
+        <p>¡Bienvenido a Epidemicalk!</p>
+        <p>Para comenzar, debe confirmar su dirección de correo electrónico.</p>
+
+        <div style="margin: 2.5em 0; text-align: center;">
+            <a href="{{ confirm_url }}" style="font-weight: 500; font-size: 14px; text-transform: uppercase; border-radius: 30px; padding: 15px 30px; background-color: #56cdcc; border-color: #56cdcc; color: #FFF; text-decoration: none;">
+            Confirmar tu correo electrónico
+            </a>
+        </div>
+        <p style="text-align:center">O usa el siguiente enlace:
+            <a href="{{ confirm_url }}" style="color: #56cdcc; font-size: 12px;">{{ confirm_url }}</a>
+        </p>
+        <p>
+            Saludos cordiales, <br />
+            Equipo de Data Science Research Perú
+        </p>
+    </div>
+
+    <hr style="border-top: 1px solid #ccc;"/>
+    <p style="color: #7c7c7c; font-size: .8rem; margin: 0">Si recibió este correo electrónico pero no se registró en Epidemicalk significa que alguien se registró utilizando esta dirección de correo electrónico.
+        Si no se registró, simplemente ignore este correo.
+    </p>
+
+    <p style="color: #7c7c7c; font-size: .8rem;">
+         Copyright © 2020 Data Science Research Perú. All rights reserved.
+    </p>
+</div>

@@ -2,13 +2,15 @@
 
 ## Installation
 
-Make sure that you have installed Python 3.8.2 (https://www.python.org/)
+Make sure that you have installed Python 3.8.0 or later (https://www.python.org/).
 
+It wil be better if you can handle your python versions with [pyenv](https://github.com/pyenv/pyenv)
+and manage your dependencies with [poetry](https://github.com/python-poetry/poetry)
 
 ### Start project
 
 Clone the project
-    
+
 ```sh
 git clone git@github.com:DataScienceResearchPeru/epidemiologic-calculator.git
 ```
@@ -19,27 +21,14 @@ Enter the project directory
  cd epidemiologic-calculator
 ```
 
-Create a virtual environment
-
+Install all the dependencies
 ```sh
-$ python3 -m venv venv
-```
-
-Active virtual environment
-
-```sh
-$ source venv/bin/activate
-```
-
-Install packages
-
-```sh
-$ pip install -r requirements.txt
+$ poetry install
 ```
 
 Run project
 ```sh
-$ python3 main.py
+$ poetry run python -m epical
 ```
 
 Open the browser at http://127.0.0.1:8080/

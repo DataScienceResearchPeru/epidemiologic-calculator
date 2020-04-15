@@ -72,11 +72,11 @@ class UserListResource(Resource):
                 return user.to_dict(), HTTPStatus.OK
 
             return (
-                {"message": "Error sending the message"},
+                {"message": "Error al enviar el mensaje"},
                 HTTPStatus.INTERNAL_SERVER_ERROR,
             )
 
-        return {"message": "Email already used"}, HTTPStatus.BAD_REQUEST
+        return {"message": "El correo electrónico ya fue usado"}, HTTPStatus.BAD_REQUEST
 
 
 class UserSendEmail(Resource):
@@ -121,7 +121,7 @@ class UserSendEmail(Resource):
                 return user.to_dict(), HTTPStatus.OK
 
             return (
-                {"message": "Error sending the message"},
+                {"message": "Error al enviar el mensaje"},
                 HTTPStatus.INTERNAL_SERVER_ERROR,
             )
         except Exception:  # nosec, pylint: disable=broad-except
@@ -151,7 +151,10 @@ class UserVerifyAccount(Resource):
             user.active_email()
             self.user_repository.add(user)
 
-            return {"message": "Email was confirmed successfully"}, HTTPStatus.OK
+            return (
+                {"message": "El correo electrónico fue confirmado con éxito"},
+                HTTPStatus.OK,
+            )
 
         except ExpiredSignatureError as e:
             print("error: {0}".format(e))
@@ -160,7 +163,10 @@ class UserVerifyAccount(Resource):
         except Exception as e:  # pylint: disable=broad-except
             print("error Exception: {0}".format(e))
 
-        return {"message": "The link is invalid or has expired"}, HTTPStatus.BAD_REQUEST
+        return (
+            {"message": "El enlace no es válido o ha expirado"},
+            HTTPStatus.BAD_REQUEST,
+        )
 
 
 class UserLoginResource(Resource):
@@ -188,13 +194,16 @@ class UserLoginResource(Resource):
                     )
 
             return (
-                {"message": "Your email has not been verified"},
+                {"message": "Tu correo electrónico no se ha verificado"},
                 HTTPStatus.BAD_REQUEST,
             )
         except Exception:  # nosec, pylint: disable=broad-except
             pass
 
-        return {"message": "Email or password is incorrect"}, HTTPStatus.UNAUTHORIZED
+        return (
+            {"message": "El correo electrónico o la contraseña son incorrectos"},
+            HTTPStatus.UNAUTHORIZED,
+        )
 
 
 class UserForgotPasswordResource(Resource):
@@ -238,17 +247,23 @@ class UserForgotPasswordResource(Resource):
 
             if self.email_service.send(data_message):
                 return (
-                    {"message": "Please check your email for the reset password link"},
+                    {
+                        "message": "Por favor revise su correo electrónico para el"
+                        " enlace de restablecimiento de contraseña"
+                    },
                     HTTPStatus.OK,
                 )
             return (
-                {"message": "Error sending the message"},
+                {"message": "Error al enviar el mensaje"},
                 HTTPStatus.INTERNAL_SERVER_ERROR,
             )
         except Exception as e:  # pylint: disable=broad-except
             print("error: {0}".format(e))
 
-        return {"message": "Email is not registered"}, HTTPStatus.BAD_REQUEST
+        return (
+            {"message": "El correo electrónico no está registrado"},
+            HTTPStatus.BAD_REQUEST,
+        )
 
 
 class UserResetPasswordResource(Resource):
@@ -272,7 +287,7 @@ class UserResetPasswordResource(Resource):
             user.change_password(new_password)
             self.user_repository.add(user)
 
-            return {"message": "Password was successfully changed"}, HTTPStatus.OK
+            return {"message": "La contraseña fue cambiada exitosamente"}, HTTPStatus.OK
 
         except ExpiredSignatureError as e:
             print("error: {0}".format(e))
@@ -282,6 +297,9 @@ class UserResetPasswordResource(Resource):
             print("error Exception: {0}".format(e))
 
         return (
-            {"message": "The link to reset the password is invalid or has expired"},
+            {
+                "message": "El enlace para restablecer la contraseña no es válido "
+                "o ha expirado"
+            },
             HTTPStatus.BAD_REQUEST,
         )

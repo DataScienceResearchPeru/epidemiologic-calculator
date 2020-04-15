@@ -10,10 +10,6 @@ from .repositories import bind_repositories
 from .services import bind_services
 from .web import setup_web_routes
 
-TEMPLATES_FOLDERS = [
-    Settings.TEMPLATE_DIR,
-]
-
 ROUTING_MODULES = [setup_web_routes]
 
 MODULES_LIST = [
@@ -46,11 +42,7 @@ def create_app(application: Flask):
     for routing in ROUTING_MODULES:
         routing(application)
 
-    # custom_loader = jinja2.ChoiceLoader(
-    #     [application.jinja_loader, jinja2.FileSystemLoader(TEMPLATES_FOLDERS)]
-    # )
-    # application.jinja_loader = custom_loader
-
     CORS(application)
     FlaskInjector(app=application, modules=MODULES_LIST)
+
     return application

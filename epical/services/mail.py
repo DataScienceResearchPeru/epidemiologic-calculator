@@ -25,10 +25,11 @@ class EmailService(EmailServiceInterface):
         self.mail = Mail()
         self.mail.init_app(APP)
 
-    def _send_email(self, message: Message):
+    @staticmethod
+    def _send_email(mail: Mail, message: Message):
         with APP.app_context():
             try:
-                self.mail.send(message)
+                mail.send(message)
             except ConnectionRefusedError as msg:
                 APP.logger.warning("%(msg)s" % {"msg": msg})
 
@@ -42,7 +43,7 @@ class EmailService(EmailServiceInterface):
         )
 
         try:
-            Thread(target=self._send_email, args=(message)).start()
+            Thread(target=self._send_email, args=(self.mail, message)).start()
             return True
 
         except SMTPAuthenticationError as msg:

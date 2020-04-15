@@ -58,8 +58,7 @@ class UserRepository(UserRepositoryInterface):
         user = self.db.session.query(User).filter(User.email == email).first()
         if user:
             return user
-
-        return None
+        raise
 
 
 def user_mapping(metadata: MetaData):

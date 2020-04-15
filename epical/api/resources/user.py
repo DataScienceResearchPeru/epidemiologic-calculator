@@ -31,7 +31,7 @@ class UserListResource(Resource):
 
         try:
             self.user_repository.get_user_by_email(data["email"])
-        except Exception:  # pylint: disable=broad-except
+        except Exception as e:  # pylint: disable=broad-except
             user = User(
                 first_name=data["firstName"],
                 last_name=data["lastName"],
@@ -70,6 +70,8 @@ class UserListResource(Resource):
 
             if self.email_service.send(data_message):
                 return user.to_dict(), HTTPStatus.OK
+
+            print("error Exception: {0}".format(e))
 
             return (
                 {"message": "Error sending the message"},

@@ -9,6 +9,7 @@ from jwt.exceptions import DecodeError, ExpiredSignatureError, InvalidTokenError
 
 from epical.conf import Settings
 from epical.entities.user import User
+from epical.repositories.exceptions import InvalidUserException
 from epical.repositories.user import UserRepositoryInterface
 from epical.services.mail import EmailServiceInterface
 
@@ -31,7 +32,7 @@ class UserListResource(Resource):
 
         try:
             self.user_repository.get_user_by_email(data["email"])
-        except Exception:  # pylint: disable=broad-except
+        except InvalidUserException:  # pylint: disable=broad-except
             user = User(
                 first_name=data["firstName"],
                 last_name=data["lastName"],
@@ -79,7 +80,7 @@ class UserListResource(Resource):
         return {"message": "El correo electrónico ya fue usado"}, HTTPStatus.BAD_REQUEST
 
 
-class UserSendEmail(Resource):
+class UserSendEmailResource(Resource):
     @inject
     def __init__(
         self,
@@ -124,8 +125,8 @@ class UserSendEmail(Resource):
                 {"message": "Error al enviar el mensaje"},
                 HTTPStatus.INTERNAL_SERVER_ERROR,
             )
-        except Exception:  # nosec, pylint: disable=broad-except
-            pass
+        except InvalidUserException:  # nosec, pylint: disable=broad-except
+            print("Invalid user")
 
         return (
             {"message": "El correo electrónico no se encuentra registrado"},
@@ -133,7 +134,7 @@ class UserSendEmail(Resource):
         )
 
 
-class UserVerifyAccount(Resource):
+class UserVerifyAccountResource(Resource):
     @inject
     def __init__(self, user_repository: UserRepositoryInterface):
         self.user_repository = user_repository
@@ -160,8 +161,8 @@ class UserVerifyAccount(Resource):
             print("error: {0}".format(e))
         except (DecodeError, InvalidTokenError) as e:
             print("error: {0}".format(e))
-        except Exception as e:  # pylint: disable=broad-except
-            print("error Exception: {0}".format(e))
+        except InvalidUserException:  # pylint: disable=broad-except
+            print("Invalid user")
 
         return (
             {"message": "El enlace no es válido o ha expirado"},
@@ -197,8 +198,8 @@ class UserLoginResource(Resource):
                 {"message": "Tu correo electrónico no se ha verificado"},
                 HTTPStatus.BAD_REQUEST,
             )
-        except Exception:  # nosec, pylint: disable=broad-except
-            pass
+        except InvalidUserException:  # nosec, pylint: disable=broad-except
+            print("Invalid user")
 
         return (
             {"message": "El correo electrónico o la contraseña son incorrectos"},
@@ -257,8 +258,8 @@ class UserForgotPasswordResource(Resource):
                 {"message": "Error al enviar el mensaje"},
                 HTTPStatus.INTERNAL_SERVER_ERROR,
             )
-        except Exception as e:  # pylint: disable=broad-except
-            print("error: {0}".format(e))
+        except InvalidUserException:  # pylint: disable=broad-except
+            print("Invalid user")
 
         return (
             {"message": "El correo electrónico no está registrado"},
@@ -293,8 +294,8 @@ class UserResetPasswordResource(Resource):
             print("error: {0}".format(e))
         except (DecodeError, InvalidTokenError) as e:
             print("error: {0}".format(e))
-        except Exception as e:  # pylint: disable=broad-except
-            print("error Exception: {0}".format(e))
+        except InvalidUserException:  # pylint: disable=broad-except
+            print("Invalid user")
 
         return (
             {

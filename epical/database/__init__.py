@@ -3,10 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from injector import Binder, singleton
 from sqlalchemy import MetaData
 
-from epical.repositories.department import department_mapping
-from epical.repositories.district import district_mapping
-from epical.repositories.province import province_mapping
-from epical.repositories.user import user_mapping
+from epical.repositories.mapping.department_mapping import department_mapping
+from epical.repositories.mapping.district_mapping import district_mapping
+from epical.repositories.mapping.province_mapping import province_mapping
+from epical.repositories.mapping.user_mapping import user_mapping
 
 from .utils import seed_data
 
@@ -24,9 +24,11 @@ def bind_databases(binder: Binder) -> Binder:
         print(e)
 
     db = SQLAlchemy(application)
+
     metadata.reflect(db.engine)
     metadata.drop_all(db.engine)
     db.session.commit()
+
     metadata.create_all(db.engine)
     db.session.commit()
 

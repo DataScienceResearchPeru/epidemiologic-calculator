@@ -27,6 +27,10 @@ class UserRepositoryInterface(ABC):
         # pylint: disable=misplaced-bare-raise
         raise NotImplementedError("Needs to be implemented by subclasses")
 
+    def update(self, uid: int, user: User):
+        # pylint: disable=misplaced-bare-raise
+        raise NotImplementedError("Needs to be implemented by subclasses")
+
 
 class UserRepository(UserRepositoryInterface):
     @inject
@@ -46,3 +50,13 @@ class UserRepository(UserRepositoryInterface):
         if user:
             return user
         raise InvalidUserException
+
+    def update(self, uid: int, user: User):
+        try:
+            self.db.session.query(User).filter(User.id == uid).update(
+                user, synchronize_session=False
+            )
+            self.db.session.commit()
+        except IntegrityError:
+            self.db.session.rollback()
+            raise InvalidUserException

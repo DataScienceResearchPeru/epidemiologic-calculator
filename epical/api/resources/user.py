@@ -32,7 +32,7 @@ class UserListResource(Resource):
 
         try:
             self.user_repository.get_user_by_email(data["email"])
-        except InvalidUserException:  # pylint: disable=broad-except
+        except InvalidUserException:
             user = User(
                 first_name=data["firstName"],
                 last_name=data["lastName"],
@@ -125,7 +125,7 @@ class UserSendEmailResource(Resource):
                 {"message": "Error al enviar el mensaje"},
                 HTTPStatus.INTERNAL_SERVER_ERROR,
             )
-        except InvalidUserException:  # nosec, pylint: disable=broad-except
+        except InvalidUserException:
             print("Invalid user")
 
         return (
@@ -161,7 +161,7 @@ class UserVerifyAccountResource(Resource):
             print("error: {0}".format(e))
         except (DecodeError, InvalidTokenError) as e:
             print("error: {0}".format(e))
-        except InvalidUserException:  # pylint: disable=broad-except
+        except InvalidUserException:
             print("Invalid user")
 
         return (
@@ -187,24 +187,28 @@ class UserLoginResource(Resource):
             user = self.user_repository.get_user_by_email(email=email)
 
             if user.is_active_email():
-                if user.valid_credential(password=password):
+                if user.valid_credential(  # pylint: disable=no-else-return
+                    password=password
+                ):
                     access_token = create_access_token(identity=email)
                     return (
                         {"full_name": user.full_name(), "access_token": access_token},
                         HTTPStatus.OK,
                     )
-
+                else:
+                    return (
+                        {"message": "La contraseña es incorrecta"},
+                        HTTPStatus.UNAUTHORIZED,
+                    )
             return (
-                {"message": "Tu correo electrónico no se ha verificado"},
+                {"message": "El correo electrónico no se ha verificado"},
                 HTTPStatus.BAD_REQUEST,
             )
-        except InvalidUserException:  # nosec, pylint: disable=broad-except
-            print("Invalid user")
-
-        return (
-            {"message": "El correo electrónico o la contraseña son incorrectos"},
-            HTTPStatus.UNAUTHORIZED,
-        )
+        except InvalidUserException:
+            return (
+                {"message": "El usuario no se encuentra registrado"},
+                HTTPStatus.UNAUTHORIZED,
+            )
 
 
 class UserForgotPasswordResource(Resource):
@@ -258,7 +262,7 @@ class UserForgotPasswordResource(Resource):
                 {"message": "Error al enviar el mensaje"},
                 HTTPStatus.INTERNAL_SERVER_ERROR,
             )
-        except InvalidUserException:  # pylint: disable=broad-except
+        except InvalidUserException:
             print("Invalid user")
 
         return (
@@ -304,3 +308,24 @@ class UserResetPasswordResource(Resource):
             },
             HTTPStatus.BAD_REQUEST,
         )
+
+
+class UserResource(Resource):
+    @inject
+    def __init__(self, user_repository: UserRepositoryInterface):
+        self.user_repository = user_repository
+
+    def post(self):
+        data = request.get_json()
+        email = data.get("email")
+        image_profile = data.get("image")
+
+        try:
+            user = self.user_repository.get_user_by_email(email)
+            new_user = user.to_update(img_profile=image_profile)
+            self.user_repository.update(uid=user.id, user=new_user)
+
+            return {"message": "El usuario se actualizó exitosamente"}, HTTPStatus.OK
+
+        except InvalidUserException:
+            return {"message": "El usuario es inválido"}, HTTPStatus.BAD_REQUEST

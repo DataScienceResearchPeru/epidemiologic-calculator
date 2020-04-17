@@ -20,6 +20,7 @@ class User:
         province_id: int,
         district_id: int,
         confirm_email: bool,
+        img_profile: str = None,
         uid: int = None,
     ):  # pylint: disable=too-many-arguments
         self.first_name = first_name
@@ -33,6 +34,7 @@ class User:
         self.department_id = department_id
         self.province_id = province_id
         self.district_id = district_id
+        self.img_profile = img_profile
         self.id = uid
 
     @staticmethod
@@ -58,6 +60,11 @@ class User:
     def is_active_email(self):
         return self.confirm_email
 
+    def to_update(self, img_profile):  # pylint: disable=no-self-use
+        return {
+            "img_profile": img_profile,
+        }
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -65,6 +72,7 @@ class User:
             "last_name": self.last_name,
             "email": self.email,
             "institution": self.institution,
+            "img_profile": self.img_profile,
             "department_id": self.department_id,
             "province_id": self.province_id,
             "district_id": self.district_id,

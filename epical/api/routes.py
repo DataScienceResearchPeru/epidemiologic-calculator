@@ -14,6 +14,7 @@ from .resources.user import (
     UserListResource,
     UserLoginResource,
     UserResetPasswordResource,
+    UserResource,
     UserSendEmailResource,
     UserVerifyAccountResource,
 )
@@ -38,3 +39,4 @@ api_rest.add_resource(
     DistrictListResource, *["/districts", "/<int:province_id>/districts"]
 )
 api_rest.add_resource(UserVerifyAccountResource, "/user/verify-account")
+api_rest.add_resource(UserResource, "/user")

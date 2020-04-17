@@ -29,6 +29,7 @@ def user_mapping(metadata: MetaData):
         Column("email", String(120), unique=True),
         Column("encrypted_password", LargeBinary(60)),
         Column("confirm_email", Boolean),
+        Column("img_profile", String(200)),
         Column("department_id", Integer, ForeignKey("departments.id")),
         Column("province_id", Integer, ForeignKey("provinces.id")),
         Column("district_id", Integer, ForeignKey("districts.id")),

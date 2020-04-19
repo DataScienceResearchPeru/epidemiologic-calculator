@@ -2,6 +2,7 @@ from flask import current_app
 from flask.cli import AppGroup
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
+from sqlalchemy.orm import clear_mappers
 
 from epidemicalk.database.utils import seed_data
 from epidemicalk.repositories.mapping.department import department
@@ -17,13 +18,11 @@ def migrate():
     db = SQLAlchemy(current_app)
 
     metadata = MetaData()
-
+    clear_mappers()
     department(metadata)
     province(metadata)
     district(metadata)
     user(metadata)
-
-    metadata.reflect(db.engine)
     metadata.create_all(db.engine)
 
     db.session.commit()
@@ -42,14 +41,6 @@ def drop():
 @database_cli.command("load_fixtures")
 def load_fixtures():
     db = SQLAlchemy(current_app)
-
-    metadata = MetaData()
-
-    department(metadata)
-    province(metadata)
-    district(metadata)
-    user(metadata)
-
     seed_data(db)
 
     db.session.commit()

@@ -31,32 +31,47 @@ Run project
 
 ```sh
 $ poetry run python -m epidemicalk
+$ FLASK_APP=epidemicalk poetry run flask database migrate
+$ FLASK_APP=epidemicalk poetry run flask database load_fixtures
 ```
 
 Open the browser at http://127.0.0.1:8080/
+
+### Docker
+
+Create `.env` and `.env.db` files according to the examples in `.env.template`p
+
+```
+$ docker-compose build
+$ docker-compose run -e FLASK_APP=epidemicalk --rm web flask database migrate
+$ docker-compose run -e FLASK_APP=epidemicalk --rm web flask database load_fixtures
+$ docker-compose up
+```
+
+Open the browser at http://127.0.0.1:8000/
 
 ### Development and code quality
 
 To install code quality tools run the folowing commands
 
 ```
-poetry run pre-commit install
+$ poetry run pre-commit install
 ```
 
 Make your changes an stage them
 
 ```
-git add .
+$ git add .
 ```
 
 Make your commit with poetry
 
 ```
-poetry run git commit -m "your message here! :D"
+$ poetry run git commit -m "your message here! :D"
 ```
 
-I you have error, fix them an then repeat `git add .` and `poetry run git commit ...` and then
+I you have error, fix them an then repeat `git add .` and `poetry run git commit ...`. If there are no errors then
 
 ```
-git push
+$ git push
 ```

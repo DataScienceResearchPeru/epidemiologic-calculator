@@ -6,6 +6,7 @@ from flask_jwt_extended import JWTManager
 from .api.routes import api_bp
 from .conf import Settings
 from .database import bind_databases
+from .management import database_cli
 from .repositories import bind_repositories
 from .services import bind_services
 from .web import setup_web_routes
@@ -46,3 +47,8 @@ def create_app(application: Flask):
     FlaskInjector(app=application, modules=MODULES_LIST)
 
     return application
+
+
+app = Flask(__name__)
+app.cli.add_command(database_cli)
+app = create_app(app)

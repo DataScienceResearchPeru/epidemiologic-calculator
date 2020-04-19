@@ -7,11 +7,9 @@ services:
       dockerfile: ./Dockerfile.dev
     ports:
       - 8000:8000
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python -m epidemicalk
     volumes:
-      - ./mipunto/:/app/mipunto:Z
-      - ./tests/:/app/tests:Z
-      - ./public:/app/public:Z
+      - ./epidemicalk/:/app/epidemicalk:Z
 
   db:
     ports:

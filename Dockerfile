@@ -9,14 +9,14 @@ RUN apt-get -y update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY requirements-dev.txt /app/
+COPY requirements.txt /app/
 WORKDIR /app
 RUN pip install -r requirements.txt
 
 ### Final image
 FROM python:3.8-slim
 
-RUN groupadd -r mipunto && useradd -r -g mipunto mipunto
+RUN groupadd -r epidemicalk && useradd -r -g epidemicalk epidemicalk
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
@@ -38,11 +38,6 @@ COPY --from=build-python /usr/local/lib/python3.8/site-packages/ /usr/local/lib/
 COPY --from=build-python /usr/local/bin/ /usr/local/bin/
 WORKDIR /app
 
-RUN python3 manage.py collectstatic --no-input
-
-RUN mkdir -p /app/media /app/static \
-    && chown -R mipunto:mipunto /app/
-
 EXPOSE 8000
 EXPOSE 8888
 ENV PORT 8000
@@ -50,4 +45,4 @@ ENV PYTHONUNBUFFERED 1
 ENV PROCESSES 4
 
 # Setup properly django container
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "mipunto.wsgi"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "epidemicalk.wsgi:app"]

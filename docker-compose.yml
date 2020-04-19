@@ -1,0 +1,28 @@
+version: "2"
+
+services:
+  web:
+    image: registry.gitlab.com/softbutterfly/mipunto/mipunto
+    restart: unless-stopped
+    networks:
+      - mipunto_backend-tier
+    env_file: .env
+    depends_on:
+      - db
+
+  db:
+    image: library/postgres:11.1-alpine
+    restart: unless-stopped
+    networks:
+      - mipunto_backend-tier
+    volumes:
+      - mipunto_db:/var/lib/postgresql
+    env_file: .env.db
+
+volumes:
+  mipunto_db:
+    driver: local
+
+networks:
+  mipunto_backend-tier:
+    driver: bridge

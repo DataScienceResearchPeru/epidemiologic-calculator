@@ -22,13 +22,15 @@ Enter the project directory
 ```
 
 Install all the dependencies
+
 ```sh
 $ poetry install
 ```
 
 Run project
+
 ```sh
-$ poetry run python -m epical
+$ poetry run python -m epidemicalk
 ```
 
 Open the browser at http://127.0.0.1:8080/

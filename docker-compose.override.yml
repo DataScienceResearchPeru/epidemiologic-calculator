@@ -1,0 +1,18 @@
+version: "2"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev
+    ports:
+      - 8000:8000
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./mipunto/:/app/mipunto:Z
+      - ./tests/:/app/tests:Z
+      - ./public:/app/public:Z
+
+  db:
+    ports:
+      - 5432:5432

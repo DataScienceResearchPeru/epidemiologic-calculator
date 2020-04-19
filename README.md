@@ -30,16 +30,16 @@ $ poetry install
 Run project
 
 ```sh
-$ poetry run python -m epidemicalk
 $ FLASK_APP=epidemicalk poetry run flask database migrate
 $ FLASK_APP=epidemicalk poetry run flask database load_fixtures
+$ poetry run python -m epidemicalk
 ```
 
-Open the browser at http://127.0.0.1:8080/
+Open the browser at `http://127.0.0.1:8080/`
 
-### Docker
+### Start project with docker
 
-Create `.env` and `.env.db` files according to the examples in `.env.template`p
+Create `.env` and `.env.db` files according to the examples in `.env.template`. Then run the folowing `docker-compose` commands
 
 ```
 $ docker-compose build
@@ -48,9 +48,9 @@ $ docker-compose run -e FLASK_APP=epidemicalk --rm web flask database load_fixtu
 $ docker-compose up
 ```
 
-Open the browser at http://127.0.0.1:8000/
+Open the browser at `http://127.0.0.1:8000/`
 
-### Development and code quality
+## Development and code quality
 
 To install code quality tools run the folowing commands
 

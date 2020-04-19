@@ -33,7 +33,7 @@ repos:
     rev: 4.0.0
     hooks:
       - id: pydocstyle
-        files: ^epical/
+        files: ^epidemicalk/
 
   - repo: https://github.com/kynan/nbstripout
     rev: master
@@ -45,7 +45,7 @@ repos:
     rev: 1.6.2
     hooks:
       - id: bandit
-        args: [-c, .bandit, -r, epical]
+        args: [-c, .bandit, -r, epidemicalk]
 
   - repo: local
     hooks:

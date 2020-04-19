@@ -1,0 +1,31 @@
+version: "2"
+
+services:
+  web:
+    # image: ...
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    networks:
+      - epidemicalk_backend-tier
+    env_file: .env
+    depends_on:
+      - db
+
+  db:
+    image: library/postgres:11.1-alpine
+    restart: unless-stopped
+    networks:
+      - epidemicalk_backend-tier
+    volumes:
+      - epidemicalk_db:/var/lib/postgresql
+    env_file: .env.db
+
+volumes:
+  epidemicalk_db:
+    driver: local
+
+networks:
+  epidemicalk_backend-tier:
+    driver: bridge

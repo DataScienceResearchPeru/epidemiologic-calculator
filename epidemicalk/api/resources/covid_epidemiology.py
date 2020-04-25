@@ -105,28 +105,28 @@ class CovidSeaichurDResource(Resource):
         data = request.get_json()
 
         epidemiological_parameters = {
-            "A1": data.get("a1", 0.50),
-            "A2": data.get("a2", 0.28),
-            "A3": data.get("a3", 0.35),
-            "A4": data.get("a4", 0.40),
-            "A5": data.get("a5", 0.20),
-            "A6": data.get("a6", 0.35),
-            "A7": data.get("a7", 0.50),
-            "A8": data.get("a8", 0.15),
-            "A9": data.get("a9", 0.30),
-            "QQ": data.get("qq", 0.0),
-            "R1": data.get("r1", 0.20),
-            "R2": data.get("r2", 0.15),
-            "R3": data.get("r3", 0.07),
-            "R4": data.get("r4", 0.03),
-            "D1": data.get("d1", 0.001),
-            "D2": data.get("d2", 0.002),
-            "D3": data.get("d3", 0.005),
+            "A1": data.get("a1") / 100.0,
+            "A2": data.get("a2") / 100.0,
+            "A3": data.get("a3") / 100.0,
+            "A4": data.get("a4") / 100.0,
+            "A5": data.get("a5") / 100.0,
+            "A6": data.get("a6") / 100.0,
+            "A7": data.get("a7") / 100.0,
+            "A8": data.get("a8") / 100.0,
+            "A9": data.get("a9") / 100.0,
+            "QQ": data.get("qq") / 100.0,
+            "R1": data.get("r1") / 100.0,
+            "R2": data.get("r2") / 100.0,
+            "R3": data.get("r3") / 100.0,
+            "R4": data.get("r4") / 100.0,
+            "D1": data.get("d1") / 100.0,
+            "D2": data.get("d2") / 100.0,
+            "D3": data.get("d3") / 100.0,
         }
 
         duration = data.get("duration", 120)
         population = data.get("population", 32000006)
-        initial_infected = data.get("initial_infected", 6.0)
+        initial_infected = data.get("infected", 6.0)
 
         initial_exposed = 0.0
         initial_asymptomatic = 0.0

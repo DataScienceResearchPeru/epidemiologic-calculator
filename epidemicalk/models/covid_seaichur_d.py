@@ -101,11 +101,7 @@ class CovidSeaichurD(Covid19Interface):
         POBLACION EPIDEMIOLOGICA TOTAL
         population = S + E + A + I + C + H + U + R + D
         """
-        if epidemiological_parameters:
-            epidemiological_parameters = deepcopy(EPIDEMIOLOGICAL_PARAMETERS).update(
-                epidemiological_parameters
-            )
-        else:
+        if epidemiological_parameters is None:
             epidemiological_parameters = deepcopy(EPIDEMIOLOGICAL_PARAMETERS)
 
         A1 = epidemiological_parameters["A1"]

@@ -1,7 +1,5 @@
 from datetime import timedelta
 from http import HTTPStatus
-
-from boto3.s3.transfer import S3Transfer
 from flask import render_template, request
 from flask_jwt_extended import create_access_token, decode_token
 from flask_restful import Resource
@@ -13,9 +11,7 @@ from epidemicalk.entities.user import User
 from epidemicalk.repositories.exceptions import InvalidUserException
 from epidemicalk.repositories.user import UserRepositoryInterface
 from epidemicalk.services.mail import EmailServiceInterface
-from mimetypes import guess_extension, guess_type
-
-import uuid
+from epidemicalk.services.aws_s3 import AmazonS3ServiceInterface
 
 class UserListResource(Resource):
     @inject
@@ -315,37 +311,15 @@ class UserResetPasswordResource(Resource):
 
 class UserResource(Resource):
     @inject
-    def __init__(self, user_repository: UserRepositoryInterface):
+    def __init__(self, user_repository: UserRepositoryInterface, amazon_s3: AmazonS3ServiceInterface):
         self.user_repository = user_repository
-
-    def upload_file(self, image_base64):
-        import boto3
-        import base64
-        import os
-        access_key = Settings.AWS_ACCESS_KEY
-        secret_key = Settings.AWS_ACCESS_SECRET
-        session = boto3.session.Session()
-        name_file = uuid.uuid4()
-        extension = guess_extension(guess_type(image_base64)[0])
-        name_file = str(name_file) + extension
-        image_base64 = image_base64.replace("data:image/png;base64,", "")
-        image_base64 = image_base64.replace("data:image/jpeg;base64,", "")
-        img_data = image_base64.encode()
-        with open(name_file, "wb") as fh:
-            fh.write(base64.decodebytes(img_data))
-        client = session.client('s3', region_name=Settings.AWS_REGION, aws_access_key_id=access_key,aws_secret_access_key=secret_key)
-        # response_file = client.upload_file(name_file, Settings.AWS_S3_BUCKET, name_file)
-        transfer = S3Transfer(client)
-        transfer.upload_file(name_file, Settings.AWS_S3_BUCKET, name_file, extra_args={'ACL': 'private'})
-        file_url = '%s/%s/%s' % (client.meta.endpoint_url, Settings.AWS_S3_BUCKET, name_file)
-        os.remove(name_file)
-        return file_url
+        self.amazon_s3 = amazon_s3
 
     def post(self):
         data = request.get_json()
         email = data.get("email")
         image_base64 = data.get("image")
-        url_s3 = self.upload_file(image_base64)
+        url_s3 = self.amazon_s3.upload(image_base64)
         image_profile = url_s3
 
         try:

@@ -25,3 +25,7 @@ class Settings(SettingsInterface):
     MAIL_USE_SSL = os.environ.get("MAIL_USE_SSL", True)
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME", "")
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD", "")
+    AWS_REGION = os.environ.get("AWS_REGION", "")
+    AWS_ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY", "")
+    AWS_ACCESS_SECRET = os.environ.get("AWS_ACCESS_SECRET", "")
+    AWS_S3_BUCKET = os.environ.get("AWS_S3_BUCKET", "")

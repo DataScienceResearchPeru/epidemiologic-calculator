@@ -1,5 +1,6 @@
 from datetime import timedelta
 from http import HTTPStatus
+
 from flask import render_template, request
 from flask_jwt_extended import create_access_token, decode_token
 from flask_restful import Resource
@@ -10,8 +11,9 @@ from epidemicalk.conf import Settings
 from epidemicalk.entities.user import User
 from epidemicalk.repositories.exceptions import InvalidUserException
 from epidemicalk.repositories.user import UserRepositoryInterface
-from epidemicalk.services.mail import EmailServiceInterface
 from epidemicalk.services.aws_s3 import AmazonS3ServiceInterface
+from epidemicalk.services.mail import EmailServiceInterface
+
 
 class UserListResource(Resource):
     @inject
@@ -311,7 +313,11 @@ class UserResetPasswordResource(Resource):
 
 class UserResource(Resource):
     @inject
-    def __init__(self, user_repository: UserRepositoryInterface, amazon_s3: AmazonS3ServiceInterface):
+    def __init__(
+        self,
+        user_repository: UserRepositoryInterface,
+        amazon_s3: AmazonS3ServiceInterface,
+    ):
         self.user_repository = user_repository
         self.amazon_s3 = amazon_s3
 

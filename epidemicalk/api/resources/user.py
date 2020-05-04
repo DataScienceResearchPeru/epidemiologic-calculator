@@ -1,7 +1,8 @@
+import os
 from datetime import timedelta
 from http import HTTPStatus
 
-from flask import render_template, request
+from flask import render_template, request, send_file
 from flask_jwt_extended import create_access_token, decode_token
 from flask_restful import Resource
 from injector import inject
@@ -12,6 +13,11 @@ from epidemicalk.entities.user import User
 from epidemicalk.repositories.exceptions import InvalidUserException
 from epidemicalk.repositories.user import UserRepositoryInterface
 from epidemicalk.services.aws_s3 import AmazonS3ServiceInterface
+from epidemicalk.services.image import (
+    PATH_SAVE_FILES,
+    get_extension_filename,
+    save_image_local,
+)
 from epidemicalk.services.mail import EmailServiceInterface
 
 
@@ -325,15 +331,47 @@ class UserResource(Resource):
         data = request.get_json()
         email = data.get("email")
         image_base64 = data.get("image")
-        url_s3 = self.amazon_s3.upload(image_base64)
-        image_profile = url_s3
+        if self.amazon_s3.is_config():
+            url_image_profile = self.amazon_s3.upload(image_base64)
+        else:
+            url_image_profile = save_image_local(image_base64, PATH_SAVE_FILES)
 
         try:
             user = self.user_repository.get_user_by_email(email)
-            new_user = user.to_update(img_profile=image_profile)
+            new_user = user.to_update(
+                img_profile=url_image_profile.replace(PATH_SAVE_FILES, "")
+            )
             self.user_repository.update(uid=user.id, user=new_user)
 
             return {"message": "El usuario se actualizó exitosamente"}, HTTPStatus.OK
 
         except InvalidUserException:
+            return {"message": "El usuario es inválido"}, HTTPStatus.BAD_REQUEST
+
+
+class UserGetImageProfile(Resource):
+    @inject
+    def __init__(
+        self,
+        user_repository: UserRepositoryInterface,
+        amazon_s3: AmazonS3ServiceInterface,
+    ):
+        self.user_repository = user_repository
+        self.amazon_s3 = amazon_s3
+
+    def post(self):
+        data = request.get_json()
+        token = data.get("token")
+        try:
+            email = decode_token(token)["identity"]
+            user = self.user_repository.get_user_by_email(email)
+            extension = get_extension_filename(user.img_profile)
+            if os.path.exists(f"{PATH_SAVE_FILES}{user.img_profile}"):
+                return send_file(
+                    f"files/{user.img_profile}", mimetype=f"image/{extension}"
+                )
+            self.amazon_s3.download(PATH_SAVE_FILES, user.img_profile)
+            return send_file(f"files/{user.img_profile}", mimetype=f"image/{extension}")
+        except InvalidUserException as e:
+            print("error: {0}".format(e))
             return {"message": "El usuario es inválido"}, HTTPStatus.BAD_REQUEST

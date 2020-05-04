@@ -11,6 +11,7 @@ from .resources.district import DistrictListResource
 from .resources.province import ProvinceListResource
 from .resources.user import (
     UserForgotPasswordResource,
+    UserGetImageProfile,
     UserListResource,
     UserLoginResource,
     UserResetPasswordResource,
@@ -30,6 +31,7 @@ api_rest.add_resource(UserLoginResource, "/user/login")
 api_rest.add_resource(UserForgotPasswordResource, "/user/forgot-password")
 api_rest.add_resource(UserResetPasswordResource, "/user/reset-password")
 api_rest.add_resource(UserSendEmailResource, "/user/resend-email")
+api_rest.add_resource(UserGetImageProfile, "/user/image")
 api_rest.add_resource(DepartmentListResource, "/departments")
 api_rest.add_resource(
     ProvinceListResource, *["/provinces", "/<int:department_id>/provinces"]

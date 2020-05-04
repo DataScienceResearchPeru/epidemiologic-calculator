@@ -20,6 +20,10 @@ class AmazonS3ServiceInterface(ABC):
         # pylint: disable=misplaced-bare-raise
         raise NotImplementedError("Needs to be implemented by subclasses")
 
+    def download(self, folder_path: str, name_file: str):
+        # pylint: disable=misplaced-bare-raise
+        raise NotImplementedError("Needs to be implemented by subclasses")
+
     def is_config(self):
         raise NotImplementedError("Needs to be implemented by subclasses")
 
@@ -37,6 +41,11 @@ class AmazonS3Service(AmazonS3ServiceInterface):
             aws_secret_access_key=secret_key,
         )
 
+    def download(self, folder_path: str, name_file: str):
+        transfer = S3Transfer(self.client)
+        path_file = os.path.join(folder_path, name_file)
+        transfer.download_file(Settings.AWS_S3_BUCKET, name_file, path_file)
+
     def upload(self, image_base64: str):
         name_file = generate_name_random(image_base64)
         image_base64 = clean_base64(image_base64)
@@ -45,13 +54,13 @@ class AmazonS3Service(AmazonS3ServiceInterface):
         transfer.upload_file(
             name_file, Settings.AWS_S3_BUCKET, name_file, extra_args={"ACL": "private"}
         )
-        file_url = "%s/%s/%s" % (
-            self.client.meta.endpoint_url,
-            Settings.AWS_S3_BUCKET,
-            name_file,
-        )
+        # file_url = "%s/%s/%s" % (
+        #     self.client.meta.endpoint_url,
+        #     Settings.AWS_S3_BUCKET,
+        #     name_file,
+        # )
         os.remove(name_file)
-        return file_url
+        return name_file
 
     def is_config(self):
         return Settings.AWS_ACCESS_SECRET and Settings.AWS_ACCESS_KEY

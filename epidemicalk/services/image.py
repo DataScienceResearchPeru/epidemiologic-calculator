@@ -3,9 +3,16 @@ import os
 import uuid
 from mimetypes import guess_extension, guess_type
 
+PATH_SAVE_FILES = "epidemicalk/files"
+
 
 def get_extension_base64(image_base64: str):
     extension = guess_extension(guess_type(image_base64)[0])
+    return extension
+
+
+def get_extension_filename(filename: str):
+    extension = os.path.splitext(filename)[1]
     return extension
 
 

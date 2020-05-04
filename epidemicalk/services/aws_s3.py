@@ -27,6 +27,7 @@ class AmazonS3ServiceInterface(ABC):
     def is_config(self):
         raise NotImplementedError("Needs to be implemented by subclasses")
 
+
 class AmazonS3Service(AmazonS3ServiceInterface):
     def __init__(self, app):
         self.app = app

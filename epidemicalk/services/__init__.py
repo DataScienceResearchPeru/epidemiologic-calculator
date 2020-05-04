@@ -1,8 +1,8 @@
 from flask import Flask
 from injector import Binder, singleton
 
-from .mail import EmailService, EmailServiceInterface
 from .aws_s3 import AmazonS3Service, AmazonS3ServiceInterface
+from .mail import EmailService, EmailServiceInterface
 
 __all__ = ["bind_services"]
 

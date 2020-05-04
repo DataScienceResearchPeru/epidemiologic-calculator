@@ -7,7 +7,9 @@ PATH_SAVE_FILES = "epidemicalk/files"
 
 
 def get_extension_base64(image_base64: str):
-    extension = guess_extension(guess_type(image_base64)[0])
+    # Fix this please!!:
+    # Check type in guess_type return
+    extension = guess_extension(str(guess_type(image_base64)[0]))
     return extension
 
 

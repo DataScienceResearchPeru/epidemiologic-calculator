@@ -13,7 +13,6 @@ __all__ = [
 ]
 
 
-
 class AmazonS3ServiceInterface(ABC):
     # Since this class is a subclass of ABC its methods are abstract
     # @abstractmethod

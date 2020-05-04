@@ -339,7 +339,7 @@ class UserResource(Resource):
         try:
             user = self.user_repository.get_user_by_email(email)
             new_user = user.to_update(
-                img_profile=url_image_profile.replace("epidemicalk/", "")
+                img_profile=url_image_profile.replace(PATH_SAVE_FILES, "")
             )
             self.user_repository.update(uid=user.id, user=new_user)
 
@@ -367,8 +367,11 @@ class UserGetImageProfile(Resource):
             user = self.user_repository.get_user_by_email(email)
             extension = get_extension_filename(user.img_profile)
             if os.path.exists(f"{PATH_SAVE_FILES}{user.img_profile}"):
-                return send_file(user.img_profile, mimetype=f"image/{extension}")
+                return send_file(
+                    f"files/{user.img_profile}", mimetype=f"image/{extension}"
+                )
             self.amazon_s3.download(PATH_SAVE_FILES, user.img_profile)
             return send_file(f"files/{user.img_profile}", mimetype=f"image/{extension}")
-        except InvalidUserException:
+        except InvalidUserException as e:
+            print("error: {0}".format(e))
             return {"message": "El usuario es inválido"}, HTTPStatus.BAD_REQUEST

@@ -3,7 +3,7 @@ import os
 import uuid
 from mimetypes import guess_extension, guess_type
 
-PATH_SAVE_FILES = "epidemicalk/files"
+PATH_SAVE_FILES = "epidemicalk/files/"
 
 
 def get_extension_base64(image_base64: str):

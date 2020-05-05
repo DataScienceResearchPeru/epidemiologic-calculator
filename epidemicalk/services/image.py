@@ -46,3 +46,9 @@ def save_image_local(image_base64: str, folder_path: str):
     name_file = os.path.join(folder_path, name_file)
     save_image(image_base64, name_file)
     return name_file
+
+
+def image_to_base64(file_name: str):
+    with open(file_name, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read())
+        return encoded_string

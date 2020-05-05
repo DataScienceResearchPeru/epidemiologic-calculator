@@ -2,7 +2,7 @@ import os
 from datetime import timedelta
 from http import HTTPStatus
 
-from flask import render_template, request, send_file
+from flask import render_template, request
 from flask_jwt_extended import create_access_token, decode_token
 from flask_restful import Resource
 from injector import inject
@@ -15,7 +15,7 @@ from epidemicalk.repositories.user import UserRepositoryInterface
 from epidemicalk.services.aws_s3 import AmazonS3ServiceInterface
 from epidemicalk.services.image import (
     PATH_SAVE_FILES,
-    get_extension_filename,
+    image_to_base64,
     save_image_local,
 )
 from epidemicalk.services.mail import EmailServiceInterface
@@ -199,7 +199,11 @@ class UserLoginResource(Resource):
                 ):
                     access_token = create_access_token(identity=email)
                     return (
-                        {"full_name": user.full_name(), "access_token": access_token},
+                        {
+                            "full_name": user.full_name(),
+                            "access_token": access_token,
+                            "email": user.email,
+                        },
                         HTTPStatus.OK,
                     )
                 else:
@@ -365,13 +369,10 @@ class UserGetImageProfile(Resource):
         try:
             email = decode_token(token)["identity"]
             user = self.user_repository.get_user_by_email(email)
-            extension = get_extension_filename(user.img_profile)
-            if os.path.exists(f"{PATH_SAVE_FILES}{user.img_profile}"):
-                return send_file(
-                    f"files/{user.img_profile}", mimetype=f"image/{extension}"
-                )
-            self.amazon_s3.download(PATH_SAVE_FILES, user.img_profile)
-            return send_file(f"files/{user.img_profile}", mimetype=f"image/{extension}")
+            if not os.path.exists(f"{PATH_SAVE_FILES}{user.img_profile}"):
+                self.amazon_s3.download(PATH_SAVE_FILES, user.img_profile)
+            base64 = image_to_base64(f"{PATH_SAVE_FILES}{user.img_profile}")
+            return {"image": base64.decode()}, HTTPStatus.OK
         except InvalidUserException as e:
             print("error: {0}".format(e))
             return {"message": "El usuario es inválido"}, HTTPStatus.BAD_REQUEST
